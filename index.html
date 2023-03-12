@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- js読み込み -->
+    <script src="/HamburgerShopGame/main.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- fontawesome -->
+    <link href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body>
+    <div class="vh-100 bg-dark d-flex flex-column justify-content-center align-items-center">
+        <div class="d-flex align-items-center col-md-4 col-10">
+            <div id="initial-form" class="bg-white col-12 text-center p-4">
+                <h2 class="pb-3">Clicker Empire Game</h2>
+                <div class="form-group">
+                    <input type="text" name="userName" class="form-control" placeholder="Your name" value="" required>
+                </div>
+                <div class="btn-toolbar">
+                    <div class="btn-group d-md-flex col-12 justify-content-between p-1 my-2">
+                        <button id="newBtn" type="submit" class="btn btn-primary col-md-4" onclick="initializeUserAccount();">New</button>
+                        <button id="loadBtn" type="submit" class="btn btn-primary col-md-4">Login</button>
+                    </div>
+                </div>
+            </div>
+            <!-- 2ページ目の枠 -->
+            <div id="mainPage" class="bg-green col-12 text-center text-white">
+            </div>
+            <!-- menu先のページ -->
+            <div id="sidePage" class="bg-white col-12 text-center">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

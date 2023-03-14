@@ -1,7 +1,6 @@
 const config = {
     initialForm: document.getElementById("initial-form"),
-    bankPage: document.getElementById("mainPage"),
-    sidePage: document.getElementById("sidePage"),
+    bankPage: document.getElementById("mainPage")
 }
 
 class UserAccount {
@@ -19,13 +18,25 @@ class UserAccount {
     }
 }
 
+class Hamburger{
+    /**
+     * 
+     * @param {int} count ハンバーガーの売上数
+     * @param {int} profitPerClick 1クリックあたりの利益
+     */
+    constructor(count, profitPerClick) {
+        this.count = count;
+        this.profitPerClick = profitPerClick;
+    }
+}
+
 
 
 class Game {
 
     config = {
         initialForm: document.getElementById("initial-form"),
-        bankPage: document.getElementById("mainPage"),
+        mainPage: document.getElementById("mainPage"),
         sidePage: document.getElementById("sidePage"),
     }
 
@@ -52,7 +63,7 @@ class Game {
         this.config.initialForm.classList.add("d-none");
         alert("新規登録完了。ゲームへ進みます");
 
-        createMainPage(userAccount);
+        this.config.mainPage.append(this.createMainPage(userAccount));
     }
 
     /**
@@ -79,9 +90,9 @@ class Game {
             }
 
             if (userFlag) {
-                alert("新規登録完了。ゲームを開始します");
+                alert("ログイン完了。ゲームを開始します");
                 this.config.initialForm.classList.add("d-none");
-                this.createMainPage(userAccount);
+                this.config.mainPage.append(this.createMainPage(userAccount));
 
             } else alert(inputName + "というユーザーは存在しません。新規登録をしてゲームを開始しよう");
         }
@@ -95,8 +106,327 @@ class Game {
         localStorage.setItem('users', JSON.stringify([]));
     }
 
+    /**
+     * mainページの作成
+     * @param {UserAccount} userAccount
+     * @return {object} HTMLオブジェクト
+     */
     createMainPage(userAccount) {
+        let container = document.createElement("div");
+        container.classList.add("vh-100", "d-md-flex", "justify-content-center", "container");
+        let mainContainer = document.createElement("div");
+        mainContainer.classList.add("bg-secondary", "col-md-11", "col-12", "d-md-flex", "p-5", "m-md-4");
+        container.append(mainContainer);
 
+        // 左半分を作成
+        let mainPageLeft = this.createMainPageLeft(userAccount);
+
+        // 右半分を作成
+        let mainPageRight = this.createMainPageRight(userAccount);
+
+        mainContainer.innerHTML = `
+        ${mainPageLeft}
+        ${mainPageRight}
+        `;
+
+        console.log(container);
+        console.log(typeof container);
+
+        return container;
+    }
+
+    /**
+     * 左半分を作成
+     * @param {UserAccount} userAccount
+     * @return {string}
+     */
+     createMainPageLeft(userAccount) {
+        let container = `
+        <div class="col-md-5 col-12 m-md-2 p-1 px-3 bg-dark" id="mainPageLeft">
+            <div class="text-center my-3 bg-secondary p-2 text-light">
+                <h5 id="numberOfBurger">0 Burgers</h5>
+                <h5>One click $25</h5>
+            </div>
+            <div class="col-12">
+                <img src="https://cdn.pixabay.com/photo/2014/04/02/17/00/burger-307648_960_720.png" class="burger" id="burgerImg">
+            </div>
+        </div>
+        `;
+
+        return container;
+    }
+
+    createMainPageRight(userAccount) {
+        let mainPageRightTop = `
+        <div class="col-md-7 col-12 my-md-2" id="mainPageRight">
+            <div class="bg-dark p-3 text-light">
+                <div class="d-md-flex text-center p-1">
+                    <h5 class="col-md-6 col-12 mx-1 bg-secondary">test</h5>
+                    <h5 class="col-md-6 col-12 mx-1 bg-secondary" id="age">31 years old</h5>
+                </div>
+                <div class="d-md-flex text-center p-1">
+                    <h5 class="col-md-6 col-12 bg-secondary mx-1" id="days">4186 days</h5>
+                    <h5 class="col-md-6 col-12 bg-secondary mx-1" id="totalmoney">$50075</h5>
+                </div>
+            </div>
+        `;
+
+        let mainPageRightBottom = `
+        <div class="scroll my-2 bg-dark">
+            <div id="items"><div><div>
+            <div class="d-md-flex bg-dark text-light p-3">
+                <div class="col-md-2 d-md-block d-none">
+                    <img src="./img/flip_machine.png" class="itemImg col-md-12">
+                </div>
+                <div class="col-md-6 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>Flip machine</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$15000</h5>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>0</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$25 /click</h5>
+                    </div>
+                </div>
+            </div>
+            </div><div>
+            <div class="d-md-flex bg-dark text-light p-3">
+                <div class="col-md-2 d-md-block d-none">
+                    <img src="./img/etf.png" class="itemImg col-md-12">
+                </div>
+                <div class="col-md-6 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>ETF Stock</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$300000</h5>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>0</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$0.1 /s</h5>
+                    </div>
+                </div>
+            </div>
+            </div><div>
+            <div class="d-md-flex bg-dark text-light p-3">
+                <div class="col-md-2 d-md-block d-none">
+                    <img src="./img/etf.png" class="itemImg col-md-12">
+                </div>
+                <div class="col-md-6 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>ETF Bonds</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$300000</h5>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>0</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$0.07 /s</h5>
+                    </div>
+                </div>
+            </div>
+            </div><div>
+            <div class="d-md-flex bg-dark text-light p-3">
+                <div class="col-md-2 d-md-block d-none">
+                    <img src="./img/lemonade.png" class="itemImg col-md-12">
+                </div>
+                <div class="col-md-6 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>Lemonade Stand</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$30000</h5>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>0</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$30 /s</h5>
+                    </div>
+                </div>
+            </div>
+            </div><div>
+            <div class="d-md-flex bg-dark text-light p-3">
+                <div class="col-md-2 d-md-block d-none">
+                    <img src="./img/ice_cream.webp" class="itemImg col-md-12">
+                </div>
+                <div class="col-md-6 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>Ice Cream Truck</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$100000</h5>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>0</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$120 /s</h5>
+                    </div>
+                </div>
+            </div>
+            </div><div>
+            <div class="d-md-flex bg-dark text-light p-3">
+                <div class="col-md-2 d-md-block d-none">
+                    <img src="./img/house.webp" class="itemImg col-md-12">
+                </div>
+                <div class="col-md-6 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>House</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$20000000</h5>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>0</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$32000 /s</h5>
+                    </div>
+                </div>
+            </div>
+            </div><div>
+            <div class="d-md-flex bg-dark text-light p-3">
+                <div class="col-md-2 d-md-block d-none">
+                    <img src="./img/town_house.webp" class="itemImg col-md-12">
+                </div>
+                <div class="col-md-6 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>TownHouse</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$40000000</h5>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>0</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$64000 /s</h5>
+                    </div>
+                </div>
+            </div>
+            </div><div>
+            <div class="d-md-flex bg-dark text-light p-3">
+                <div class="col-md-2 d-md-block d-none">
+                    <img src="./img/condominium.webp" class="itemImg col-md-12">
+                </div>
+                <div class="col-md-6 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>Condominium</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$250000000</h5>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>0</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$500000 /s</h5>
+                    </div>
+                </div>
+            </div>
+            </div><div>
+            <div class="d-md-flex bg-dark text-light p-3">
+                <div class="col-md-2 d-md-block d-none">
+                    <img src="./img/factory.webp" class="itemImg col-md-12">
+                </div>
+                <div class="col-md-6 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>Industrial Space</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$100000000</h5>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>0</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$2200000 /s</h5>
+                    </div>
+                </div>
+            </div>
+            </div><div>
+            <div class="d-md-flex bg-dark text-light p-3">
+                <div class="col-md-2 d-md-block d-none">
+                    <img src="./img/skyscraper.webp" class="itemImg col-md-12">
+                </div>
+                <div class="col-md-6 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>Hotel Skyscraper</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$10000000000</h5>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>0</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$25000000 /s</h5>
+                    </div>
+                </div>
+            </div>
+            </div><div>
+            <div class="d-md-flex bg-dark text-light p-3">
+                <div class="col-md-2 d-md-block d-none">
+                    <img src="./img/train.webp" class="itemImg col-md-12">
+                </div>
+                <div class="col-md-6 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>Bullet-Speed Sky Railway</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$10000000000000</h5>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>0</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$30000000000 /s</h5>
+                    </div>
+                </div>
+            </div>
+            </div></div></div>
+        </div>
+        </div>
+        `;
+
+
+        let mainPageRight = `
+        ${mainPageRightTop}
+        ${mainPageRightBottom}
+        `;
+
+        return mainPageRight;
     }
 }
 

@@ -166,6 +166,19 @@ class Game {
 
         });
 
+        // 日数経過処理と年齢経過処理
+        setInterval(function(){
+            userAccount.days += 1;
+            if (userAccount.days % 365 === 0) {
+                // 年齢の経過
+                userAccount.age += 1;
+                mainContainer.querySelector("#age").innerHTML = `${userAccount.age} years old`;
+            }
+            mainContainer.querySelector("#days").innerHTML = `${userAccount.days} days`;
+            
+        },1000);
+
+
         return container;
     }
 
@@ -199,7 +212,7 @@ class Game {
                     <h5 class="col-md-6 col-12 mx-1 bg-secondary" id="age">${userAccount.age} years old</h5>
                 </div>
                 <div class="d-md-flex text-center p-1">
-                    <h5 class="col-md-6 col-12 bg-secondary mx-1" id="days">4186 days</h5>
+                    <h5 class="col-md-6 col-12 bg-secondary mx-1" id="days">${userAccount.days} days</h5>
                     <h5 class="col-md-6 col-12 bg-secondary mx-1" id="totalMoney">$${userAccount.assetValue}</h5>
                 </div>
             </div>

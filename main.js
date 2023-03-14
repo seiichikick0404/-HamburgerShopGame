@@ -5,16 +5,18 @@ const config = {
 
 class UserAccount {
     /**
-     * @param {string} name 　　 ユーザー名
-     * @param {int} age     　　 年齢
-     * @param {int} days    　　 経過日数
-     * @param {int} assetValue  資産額
+     * @param {string} name 　　         ユーザー名
+     * @param {int} age     　　         年齢
+     * @param {int} days    　　         経過日数
+     * @param {int} assetValue          資産額
+     * @param {Hamburger} hamburgerInfo ハンバーガー売上情報
      */
-    constructor(name, age, days, assetValue) {
+    constructor(name, age, days, assetValue, hamburgerInfo) {
         this.name = name;
         this.age = age;
         this.days = days;
         this.assetValue = assetValue;
+        this.hamburgerInfo = hamburgerInfo;
     }
 }
 
@@ -49,12 +51,12 @@ class Game {
     initializeUserAccount() {
         // 初期化処理
         if (!localStorage.getItem('users')) {
-            setUsers();
+            this.setUsers();
         }
 
         const savedUsers = JSON.parse(localStorage.getItem('users'));
         const userName = document.querySelector(`input[name="userName"]`).value;
-        const userAccount = new UserAccount(userName, 20, 0, 50000);
+        const userAccount = new UserAccount(userName, 20, 0, 50000, new Hamburger(0, 25));
         this.loginUser = userAccount;
 
         savedUsers.push(userAccount);
@@ -71,11 +73,21 @@ class Game {
      * @return {void}
      */
     loginUserAccount() {
+        // デバッグ用
+        // localStorage.removeItem("users");
+        // console.log(JSON.parse(localStorage.getItem("users")));
+        // return;
+
+        // 初期化処理
+        if (!localStorage.getItem('users')) {
+            this.setUsers();
+        }
+
         // 保存されてるusersを取得
         const userList = JSON.parse(localStorage.getItem("users"));
         const inputName = document.querySelector(`input[name="userName"]`).value;
         let userFlag = false;
-        let userAccount ;
+        let userAccount;
 
         if (inputName === undefined || inputName === null || inputName === "") {
             alert("名前を入力してください");
@@ -107,6 +119,18 @@ class Game {
     }
 
     /**
+     * ハンバーガーを1つ売る
+     * @param {userAccount} userAccount
+     * @return {void}
+     */
+     sellBurger(userAccount) {
+        // 個数を追加
+        userAccount.hamburgerInfo.count += 1;
+        // 売上を資産額に追加
+        userAccount.assetValue += userAccount.hamburgerInfo.profitPerClick;
+    }
+
+    /**
      * mainページの作成
      * @param {UserAccount} userAccount
      * @return {object} HTMLオブジェクト
@@ -129,8 +153,18 @@ class Game {
         ${mainPageRight}
         `;
 
-        console.log(container);
-        console.log(typeof container);
+        const burgerImg = mainContainer.querySelector("#burgerImg");
+        var _this_ = this /* thisを_this_に代入 */
+        burgerImg.addEventListener("click", function() {
+            // ハンバーガーを1つ売る
+            _this_.sellBurger(userAccount);
+
+            // 更新した内容を反映させる
+            mainContainer.querySelector("#numberOfBurger").innerHTML =`${userAccount.hamburgerInfo.count} Burgers`;
+            mainContainer.querySelector("#profitPerClick").innerHTML =`One click $${userAccount.hamburgerInfo.profitPerClick}`;
+            mainContainer.querySelector("#totalMoney").innerHTML = `$${userAccount.assetValue}`;
+
+        });
 
         return container;
     }
@@ -144,8 +178,8 @@ class Game {
         let container = `
         <div class="col-md-5 col-12 m-md-2 p-1 px-3 bg-dark" id="mainPageLeft">
             <div class="text-center my-3 bg-secondary p-2 text-light">
-                <h5 id="numberOfBurger">0 Burgers</h5>
-                <h5>One click $25</h5>
+                <h5 id="numberOfBurger">${userAccount.hamburgerInfo.count} Burgers</h5>
+                <h5 id="profitPerClick">One click $${userAccount.hamburgerInfo.profitPerClick}</h5>
             </div>
             <div class="col-12">
                 <img src="https://cdn.pixabay.com/photo/2014/04/02/17/00/burger-307648_960_720.png" class="burger" id="burgerImg">
@@ -161,12 +195,12 @@ class Game {
         <div class="col-md-7 col-12 my-md-2" id="mainPageRight">
             <div class="bg-dark p-3 text-light">
                 <div class="d-md-flex text-center p-1">
-                    <h5 class="col-md-6 col-12 mx-1 bg-secondary">test</h5>
-                    <h5 class="col-md-6 col-12 mx-1 bg-secondary" id="age">31 years old</h5>
+                    <h5 class="col-md-6 col-12 mx-1 bg-secondary">${userAccount.name}</h5>
+                    <h5 class="col-md-6 col-12 mx-1 bg-secondary" id="age">${userAccount.age} years old</h5>
                 </div>
                 <div class="d-md-flex text-center p-1">
                     <h5 class="col-md-6 col-12 bg-secondary mx-1" id="days">4186 days</h5>
-                    <h5 class="col-md-6 col-12 bg-secondary mx-1" id="totalmoney">$50075</h5>
+                    <h5 class="col-md-6 col-12 bg-secondary mx-1" id="totalMoney">$${userAccount.assetValue}</h5>
                 </div>
             </div>
         `;
@@ -429,6 +463,8 @@ class Game {
         return mainPageRight;
     }
 }
+
+
 
 /**
  * ゲームの実行関数

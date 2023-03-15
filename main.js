@@ -216,9 +216,8 @@ class Game {
             itemCards[i].addEventListener("click", function() {
                 // 商品一覧画面を非表示にする
                 mainPageRight.querySelector("#items").classList.add("d-none");
-                // 詳細ページを作成する関数
+                // 詳細ページを作成する
                 let detailPage = _this_.createDetailPage(userAccount, i);
-                console.log(detailPage);
                 mainPageRight.querySelector(".scroll").append(detailPage);
 
             });
@@ -325,6 +324,8 @@ class Game {
      * @return {Object}
      */
     createDetailPage(userAccount, itemIndex) {
+        const item = userAccount.items[itemIndex];
+
         let container = document.createElement("div");
         container.classList.add("bg-danger");
         let detailContainer = document.createElement("div");
@@ -337,13 +338,13 @@ class Game {
         detailPageTop.innerHTML = `
         <div class="d-flex justify-content-between">
             <div>
-                <h3>${userAccount.items[itemIndex].itemName}</h3>
-                <h5>Max purchases: Infinity</h5>
-                <h5>Price: 300000</h5>
-                <h5>Get ￥0.07/sec</h5>
+                <h3>${item.itemName}</h3>
+                <h5>Max purchases: ${item.maxPurchase}</h5>
+                <h5>Price: ${item.price}</h5>
+                <h5>Get $${item.profit}/sec</h5>
             </div>
             <div class="col-5 d-flex justify-content-center align-items-center">
-                <img src="https://cdn.pixabay.com/photo/2016/03/31/20/51/chart-1296049_960_720.png" width="100px" height="100px">
+                <img src="${item.imgUrl}" width="100px" height="100px">
             </div>
         </div>
         `;
@@ -353,7 +354,7 @@ class Game {
         detailPageMiddle.innerHTML = `
             <h5>How many would you like to buy?</h5>
             <input class=" col-12 bill-input" type="number" min="1" placeholder="0" value="1">
-            <h5 id="buy-total" class="text-right">total: ￥0</h5>
+            <h5 id="buy-total" class="text-right">total: $${item.price}</h5>
         `;
 
         // 詳細画面下部
@@ -363,6 +364,22 @@ class Game {
             <button class="btn btn-light back-btn">Go Back</button>
             <button class="btn btn-primary purchase-btn">Purchase</button>
         `;
+
+        // 合計金額を表示する処理
+        detailPageMiddle.querySelector(".bill-input").addEventListener("change", function(event) {
+            let total = item.price * event.target.value;
+            detailPageMiddle.querySelector("#buy-total").innerHTML = `total: $${total}`;
+        });
+
+        /**
+         * todo
+         * main画面に戻る処理
+         */
+
+        /**
+         * todo
+         * 購入時の処理
+         */
 
         detailContainer.append(detailPageTop, detailPageMiddle, detailPageBottom);
 

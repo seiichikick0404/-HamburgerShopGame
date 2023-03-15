@@ -24,7 +24,6 @@ class UserAccount {
 
 class Hamburger{
     /**
-     * 
      * @param {Number} count ハンバーガーの売上数
      * @param {Number} profitPerClick 1クリックあたりの利益
      */
@@ -184,10 +183,7 @@ class Game {
         // 右半分を作成
         let mainPageRight = this.createMainPageRight(userAccount);
 
-        mainContainer.innerHTML = `
-        ${mainPageLeft}
-        ${mainPageRight}
-        `;
+        mainContainer.append(mainPageLeft, mainPageRight);
 
         const burgerImg = mainContainer.querySelector("#burgerImg");
         var _this_ = this /* thisを_this_に代入 */
@@ -221,11 +217,13 @@ class Game {
     /**
      * 左半分を作成
      * @param {UserAccount} userAccount
-     * @return {string}
+     * @return {Object}
      */
      createMainPageLeft(userAccount) {
-        let container = `
-        <div class="col-md-5 col-12 m-md-2 p-1 px-3 bg-dark" id="mainPageLeft">
+        let container = document.createElement("div");
+        container.classList.add("col-md-5", "col-12", "m-md-2", "p-1", "px-3", "bg-dark");
+        container.setAttribute("id", "mainPageLeft");
+        container.innerHTML = `
             <div class="text-center my-3 bg-secondary p-2 text-light">
                 <h5 id="numberOfBurger">${userAccount.hamburgerInfo.count} Burgers</h5>
                 <h5 id="profitPerClick">One click $${userAccount.hamburgerInfo.profitPerClick}</h5>
@@ -233,15 +231,21 @@ class Game {
             <div class="col-12">
                 <img src="https://cdn.pixabay.com/photo/2014/04/02/17/00/burger-307648_960_720.png" class="burger" id="burgerImg">
             </div>
-        </div>
         `;
-
         return container;
     }
 
+    /**
+     * @param {UserAccount} userAccount
+     * @return {Object}
+     */
     createMainPageRight(userAccount) {
-        let mainPageRightTop = `
-        <div class="col-md-7 col-12 my-md-2" id="mainPageRight">
+        let mainPageRightContainer = document.createElement("div");
+        mainPageRightContainer.classList.add("col-md-7", "col-12", "my-md-2");
+        mainPageRightContainer.setAttribute("id", "mainPageRight");
+
+        let mainPageRightTop =
+        `
             <div class="bg-dark p-3 text-light">
                 <div class="d-md-flex text-center p-1">
                     <h5 class="col-md-6 col-12 mx-1 bg-secondary">${userAccount.name}</h5>
@@ -253,50 +257,51 @@ class Game {
                 </div>
             </div>
         `;
-        
 
 
-        // テスト------------------------------------------------
-        let itemCard = "";
-        
+        let mainPageRightBottom = document.createElement("div");
+        mainPageRightBottom.classList.add("scroll", "my-2", "bg-dark");
+        let items = document.createElement("div");
+        items.setAttribute("id", "items");
+        mainPageRightBottom.append(items);
 
-        // -----------------------------------------------------
 
-        let mainPageRightBottom = `
-        <div class="scroll my-2 bg-dark">
-            <div id="items"><div><div>
-            <div class="d-md-flex bg-dark text-light p-3">
+        for (let i = 0; i < userAccount.items.length; i++) {
+            let clickOrs = i < 1 ? "click" : "s";
+            let item = document.createElement("div");
+            item.classList.add("d-md-flex", "bg-dark", "text-light", "p-3");
+            item.innerHTML = `
                 <div class="col-md-2 d-md-block d-none">
-                    <img src="./img/flip_machine.png" class="itemImg col-md-12">
+                    <img src="${userAccount.items[i].imgUrl}" class="img-fluid itemImg col-md-12">
                 </div>
                 <div class="col-md-6 col-12">
                     <div class="justify-content-center d-md-flex">
-                        <h5>Flip machine</h5>
+                        <h5>${userAccount.items[i].itemName}</h5>
                     </div>
                     <div class="justify-content-center d-md-flex">
-                        <h5>$15000</h5>
+                        <h5>$${userAccount.items[i].price}</h5>
                     </div>
                 </div>
                 <div class="col-md-4 col-12">
                     <div class="justify-content-center d-md-flex">
-                        <h5>0</h5>
+                        <h5>${userAccount.items[i].purchaseCount}</h5>
                     </div>
                     <div class="justify-content-center d-md-flex">
-                        <h5>$25 /click</h5>
+                        <h5>$${userAccount.items[i].profit} /${clickOrs}</h5>
                     </div>
                 </div>
-            </div>
-            
-        </div>
-        `;
+            `;
+
+            items.append(item);
+        }
 
 
-        let mainPageRight = `
+        mainPageRightContainer.innerHTML = `
         ${mainPageRightTop}
-        ${mainPageRightBottom}
         `;
+        mainPageRightContainer.append(mainPageRightBottom);
 
-        return mainPageRight;
+        return mainPageRightContainer;
     }
 }
 

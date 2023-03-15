@@ -77,7 +77,7 @@ class Game {
 
         const items = [
             new Item("Flip machine", "ability", 1500, "https://cdn.pixabay.com/photo/2019/06/30/20/09/grill-4308709_960_720.png", 0, 25, 500),
-            new Item("ETF Stock", "investment", 300000, "https://cdn.pixabay.com/photo/2019/06/30/20/09/grill-4308709_960_720.png", 0, 0.1, Infinity),
+            new Item("ETF Stock", "investment", 300000, "https://cdn.pixabay.com/photo/2016/03/31/20/51/chart-1296049_960_720.png", 0, 0.1, Infinity),
             new Item("ETF Bonds", "investment", 300000, "https://cdn.pixabay.com/photo/2016/03/31/20/51/chart-1296049_960_720.png", 0, 0.07, Infinity),
             new Item("Lemonade Stand", "realEstate", 30000, "https://cdn.pixabay.com/photo/2012/04/15/20/36/juice-35236_960_720.png", 0, 30, 1000),
             new Item("Ice Cream Truck", "realEstate", 100000, "https://cdn.pixabay.com/photo/2020/01/30/12/37/ice-cream-4805333_960_720.png", 0, 120, 500),
@@ -186,7 +186,7 @@ class Game {
         mainContainer.append(mainPageLeft, mainPageRight);
 
         const burgerImg = mainContainer.querySelector("#burgerImg");
-        var _this_ = this /* thisを_this_に代入 */
+        let _this_ = this /* thisを_this_に代入 */
         burgerImg.addEventListener("click", function() {
             // ハンバーガーを1つ売る
             _this_.sellBurger(userAccount);
@@ -209,6 +209,20 @@ class Game {
             mainContainer.querySelector("#days").innerHTML = `${userAccount.days} days`;
 
         },1000);
+
+        // 商品購入画面
+        const itemCards = mainContainer.querySelectorAll(".item-card-box");
+        for (let i = 0; i < itemCards.length; i++) {
+            itemCards[i].addEventListener("click", function() {
+                // 商品一覧画面を非表示にする
+                mainPageRight.querySelector("#items").classList.add("d-none");
+                // 詳細ページを作成する関数
+                let detailPage = _this_.createDetailPage(userAccount, i);
+                console.log(detailPage);
+                mainPageRight.querySelector(".scroll").append(detailPage);
+
+            });
+        }
 
 
         return container;
@@ -269,7 +283,7 @@ class Game {
         for (let i = 0; i < userAccount.items.length; i++) {
             let clickOrs = i < 1 ? "click" : "s";
             let item = document.createElement("div");
-            item.classList.add("d-md-flex", "bg-dark", "text-light", "p-3");
+            item.classList.add("item-card-box", "d-md-flex", "bg-dark", "text-light", "p-3");
             item.innerHTML = `
                 <div class="col-md-2 d-md-block d-none">
                     <img src="${userAccount.items[i].imgUrl}" class="img-fluid itemImg col-md-12">
@@ -302,6 +316,57 @@ class Game {
         mainPageRightContainer.append(mainPageRightBottom);
 
         return mainPageRightContainer;
+    }
+
+    /**
+     * 商品詳細ページの作成
+     * @param {UserAccount} userAccount 
+     * @param {Number} itemIndex 
+     * @return {Object}
+     */
+    createDetailPage(userAccount, itemIndex) {
+        let container = document.createElement("div");
+        container.classList.add("bg-danger");
+        let detailContainer = document.createElement("div");
+        detailContainer.classList.add("container", "py-3", "bg-dark", "text-light");
+        container.append(detailContainer);
+
+        // 詳細画面上部
+        let detailPageTop = document.createElement("div");
+        detailPageTop.classList.add("d-flex", "justify-content-between");
+        detailPageTop.innerHTML = `
+        <div class="d-flex justify-content-between">
+            <div>
+                <h3>${userAccount.items[itemIndex].itemName}</h3>
+                <h5>Max purchases: Infinity</h5>
+                <h5>Price: 300000</h5>
+                <h5>Get ￥0.07/sec</h5>
+            </div>
+            <div class="col-5 d-flex justify-content-center align-items-center">
+                <img src="https://cdn.pixabay.com/photo/2016/03/31/20/51/chart-1296049_960_720.png" width="100px" height="100px">
+            </div>
+        </div>
+        `;
+
+        // 詳細画面中部
+        let detailPageMiddle = document.createElement("div");
+        detailPageMiddle.innerHTML = `
+            <h5>How many would you like to buy?</h5>
+            <input class=" col-12 bill-input" type="number" min="1" placeholder="0" value="1">
+            <h5 id="buy-total" class="text-right">total: ￥0</h5>
+        `;
+
+        // 詳細画面下部
+        let detailPageBottom = document.createElement("div");
+        detailPageBottom.classList.add("d-flex", "justify-content-around");
+        detailPageBottom.innerHTML = `
+            <button class="btn btn-light back-btn">Go Back</button>
+            <button class="btn btn-primary purchase-btn">Purchase</button>
+        `;
+
+        detailContainer.append(detailPageTop, detailPageMiddle, detailPageBottom);
+
+        return container;
     }
 }
 

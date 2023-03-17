@@ -417,8 +417,6 @@ class Game {
      * @return {void}
      */
     itemPurchase(userAccount, item,  mainPageRight) {
-        console.log("aaa");
-        
         // 商品の効力を反映 能力, 投資、不動産投資
         let _this_ = this;
         let purchaseCount = parseInt(mainPageRight.querySelector(".bill-input").value);
@@ -430,9 +428,8 @@ class Game {
             _this_.investmentAssignment(userAccount, item, purchaseCount);
 
         } else if (item.type === "realEstate") {
-            console.log(item.maxPurchase - purchaseCount);
-            // todo 不動産購入処理
-            _this_.realEstateAssignment(userAccount, item, purchaseCount);
+            if (item.maxPurchase - purchaseCount < 0) alert("購入上限数を超えています");
+            else _this_.realEstateAssignment(userAccount, item, purchaseCount);
         }
     }
 
@@ -463,7 +460,6 @@ class Game {
         let total = parseInt(item.price * purchaseCount);
         item.purchaseCount += purchaseCount;
         userAccount.assetValue -= total;
-        
 
         if (item.itemName === "ETF Stock") {
             item.totalInvestment += total;
@@ -482,6 +478,8 @@ class Game {
      */
     realEstateAssignment(userAccount, item, purchaseCount) {
         let total = parseInt(item.price * purchaseCount);
+
+        item.maxPurchase -= purchaseCount;
         item.purchaseCount += purchaseCount;
         userAccount.assetValue -= total;
         item.totalRealEstate += total;
@@ -489,8 +487,8 @@ class Game {
 
     /**
      * メインページへ戻る
-     * @param {UserAccount} userAccount 
-     * @param {Game} _this_ 
+     * @param {UserAccount} userAccount
+     * @param {Game} _this_
      */
     returnMainPage(userAccount, _this_) {
         _this_.config.mainPage.innerHTML = "";

@@ -35,15 +35,18 @@ class Hamburger{
 
 class Item {
     /**
-     * @param {string} itemName       商品名
-     * @param {Number} price          購入価格
-     * @param {string} type           能力タイプ
-     * @param {string} imgUrl         画像URL
-     * @param {Number} purchaseCount  購入数
-     * @param {Number} profit         1クリックまたは毎秒当たりの利益
-     * @param {Number} maxPurchase    購入できる最大数
+     * @param {string} itemName        商品名
+     * @param {Number} price           購入価格
+     * @param {string} type            能力タイプ
+     * @param {string} imgUrl          画像URL
+     * @param {Number} purchaseCount   購入数
+     * @param {Number} profit          1クリックまたは毎秒当たりの利益
+     * @param {Number} maxPurchase     購入できる最大数
+     * @param {Number} totalInvestment 保有してる株式資産額
+     * @param {Number} totalBond       保有してる債権資産額
+     * @param {Number} totalRealEstate 保有してる不動産資産額
      */
-    constructor(itemName, type, price, imgUrl, purchaseCount, profit, maxPurchase) {
+    constructor(itemName, type, price, imgUrl, purchaseCount, profit, maxPurchase, totalInvestment, totalBond, totalRealEstate) {
         this.itemName = itemName;
         this.type = type;
         this.price = price;
@@ -51,6 +54,9 @@ class Item {
         this.purchaseCount = purchaseCount;
         this.profit = profit;
         this.maxPurchase = maxPurchase;
+        this.totalInvestment = totalInvestment;
+        this.totalBond = totalBond;
+        this.totalRealEstate = totalRealEstate;
     }
 }
 
@@ -76,17 +82,17 @@ class Game {
         }
 
         const items = [
-            new Item("Flip machine", "ability", 1500, "https://cdn.pixabay.com/photo/2019/06/30/20/09/grill-4308709_960_720.png", 0, 25, 500),
-            new Item("ETF Stock", "investment", 300000, "https://cdn.pixabay.com/photo/2016/03/31/20/51/chart-1296049_960_720.png", 0, 0.1, Infinity),
-            new Item("ETF Bonds", "investment", 300000, "https://cdn.pixabay.com/photo/2016/03/31/20/51/chart-1296049_960_720.png", 0, 0.07, Infinity),
-            new Item("Lemonade Stand", "realEstate", 30000, "https://cdn.pixabay.com/photo/2012/04/15/20/36/juice-35236_960_720.png", 0, 30, 1000),
-            new Item("Ice Cream Truck", "realEstate", 100000, "https://cdn.pixabay.com/photo/2020/01/30/12/37/ice-cream-4805333_960_720.png", 0, 120, 500),
-            new Item("House", "realEstate", 20000000, "	https://cdn.pixabay.com/photo/2016/03/31/18/42/home-1294564_960_720.png", 0, 32000, 100),
-            new Item("TownHouse", "realEstate", 40000000, "https://cdn.pixabay.com/photo/2019/06/15/22/30/modern-house-4276598_960_720.png", 0, 64000, 100),
-            new Item("Mansion", "realEstate", 250000000, "	https://cdn.pixabay.com/photo/2017/10/30/20/52/condominium-2903520_960_720.png", 0, 500000, 20),
-            new Item("Industrial Space", "realEstate", 1000000000, "https://cdn.pixabay.com/photo/2012/05/07/17/35/factory-48781_960_720.png", 0, 2200000, 10),
-            new Item("Hotel Skyscraper", "realEstate", 10000000000, "https://cdn.pixabay.com/photo/2012/05/07/18/03/skyscrapers-48853_960_720.png", 0, 25000000, 5),
-            new Item("Bullet-Speed Sky Railway", "realEstate", 10000000000000, "https://cdn.pixabay.com/photo/2013/07/13/10/21/train-157027_960_720.png", 0, 30000000000, 1),
+            new Item("Flip machine", "ability", 15000, "https://cdn.pixabay.com/photo/2019/06/30/20/09/grill-4308709_960_720.png", 0, 25, 500, 0, 0, 0),
+            new Item("ETF Stock", "investment", 300000, "https://cdn.pixabay.com/photo/2016/03/31/20/51/chart-1296049_960_720.png", 0, 0.1, Infinity, 0, 0, 0),
+            new Item("ETF Bonds", "investment", 300000, "https://cdn.pixabay.com/photo/2016/03/31/20/51/chart-1296049_960_720.png", 0, 0.07, Infinity, 0, 0, 0),
+            new Item("Lemonade Stand", "realEstate", 30000, "https://cdn.pixabay.com/photo/2012/04/15/20/36/juice-35236_960_720.png", 0, 30, 1000, 0, 0, 0),
+            new Item("Ice Cream Truck", "realEstate", 100000, "https://cdn.pixabay.com/photo/2020/01/30/12/37/ice-cream-4805333_960_720.png", 0, 120, 500, 0, 0, 0),
+            new Item("House", "realEstate", 20000000, "	https://cdn.pixabay.com/photo/2016/03/31/18/42/home-1294564_960_720.png", 0, 32000, 100, 0, 0, 0),
+            new Item("TownHouse", "realEstate", 40000000, "https://cdn.pixabay.com/photo/2019/06/15/22/30/modern-house-4276598_960_720.png", 0, 64000, 100, 0, 0, 0),
+            new Item("Mansion", "realEstate", 250000000, "	https://cdn.pixabay.com/photo/2017/10/30/20/52/condominium-2903520_960_720.png", 0, 500000, 20, 0, 0, 0),
+            new Item("Industrial Space", "realEstate", 1000000000, "https://cdn.pixabay.com/photo/2012/05/07/17/35/factory-48781_960_720.png", 0, 2200000, 10, 0, 0, 0),
+            new Item("Hotel Skyscraper", "realEstate", 10000000000, "https://cdn.pixabay.com/photo/2012/05/07/18/03/skyscrapers-48853_960_720.png", 0, 25000000, 5, 0, 0, 0),
+            new Item("Bullet-Speed Sky Railway", "realEstate", 10000000000000, "https://cdn.pixabay.com/photo/2013/07/13/10/21/train-157027_960_720.png", 0, 30000000000, 1, 0, 0, 0),
         ];
 
         const savedUsers = JSON.parse(localStorage.getItem('users'));
@@ -217,7 +223,7 @@ class Game {
                 // 商品一覧画面を非表示にする
                 mainPageRight.querySelector("#items").classList.add("d-none");
                 // 詳細ページを作成する
-                let detailPage = _this_.createDetailPage(userAccount, i);
+                let detailPage = _this_.createDetailPage(userAccount, i, mainPageRight);
                 mainPageRight.querySelector(".scroll").append(detailPage);
 
             });
@@ -321,9 +327,10 @@ class Game {
      * 商品詳細ページの作成
      * @param {UserAccount} userAccount 
      * @param {Number} itemIndex 
+     * @param {Object} mainPageRight
      * @return {Object}
      */
-    createDetailPage(userAccount, itemIndex) {
+    createDetailPage(userAccount, itemIndex, mainPageRight) {
         const item = userAccount.items[itemIndex];
 
         let container = document.createElement("div");
@@ -361,8 +368,8 @@ class Game {
         let detailPageBottom = document.createElement("div");
         detailPageBottom.classList.add("d-flex", "justify-content-around");
         detailPageBottom.innerHTML = `
-            <button class="btn btn-light back-btn">Go Back</button>
-            <button class="btn btn-primary purchase-btn">Purchase</button>
+            <button id="btnBack" class="btn btn-light back-btn">Go Back</button>
+            <button id="btnPurchase" class="btn btn-primary purchase-btn">Purchase</button>
         `;
 
         // 合計金額を表示する処理
@@ -371,20 +378,113 @@ class Game {
             detailPageMiddle.querySelector("#buy-total").innerHTML = `total: $${total}`;
         });
 
-        /**
-         * todo
-         * main画面に戻る処理
-         */
 
-        /**
-         * todo
-         * 購入時の処理
-         */
+        //戻るボタンでアイテムリストページに戻る
+        detailPageBottom.querySelector("#btnBack").addEventListener("click", function(){
+            _this_.returnMainPage(userAccount, _this_);
+        });
+
+        // 購入時の処理
+        const _this_ = this;
+        detailPageBottom.querySelector("#btnPurchase").addEventListener("click", function(){
+            console.log("ボタンがクリックされました");
+            let totalText = mainPageRight.querySelector("#buy-total").innerHTML;
+            let total = parseInt(totalText.slice(8));
+
+            // 所持金が足りない場合
+            if (userAccount.assetValue < total) {
+                alert("所持金が不足しています");
+            } else {
+                // 購入できた場合
+                _this_.itemPurchase(userAccount, item, mainPageRight);
+
+                // メインページに戻る
+                _this_.returnMainPage(userAccount, _this_);
+
+            }
+            
+        });
 
         detailContainer.append(detailPageTop, detailPageMiddle, detailPageBottom);
 
         return container;
     }
+
+    /**
+     * 商品購入時の処理
+     * @param {UserAccount} userAccount 
+     * @param {Item} item
+     * @param {Object} mainPageRight 
+     * @return {void}
+     */
+    itemPurchase(userAccount, item,  mainPageRight) {
+        console.log("aaa");
+        
+        // 商品の効力を反映 能力, 投資、不動産投資
+        let _this_ = this;
+        let purchaseCount = parseInt(mainPageRight.querySelector(".bill-input").value);
+        if (item.type === "ability") {
+            
+            if (item.maxPurchase - purchaseCount < 0) alert("購入上限数を超えています");
+            else _this_.abilityAssignment(userAccount, item, purchaseCount);
+
+        } else if (item.type === "investment") {
+            _this_.investmentAssignment(userAccount, item, mainPageRight);
+
+        } else if (item.type === "realEstate") {
+            console.log(item.maxPurchase - purchaseCount);
+
+            // todo 不動産購入処理
+        }
+
+    }
+
+
+    /**
+     * ability効果の反映
+     * @param {UserAccount} userAccount 
+     * @param {Number} purchaseCount 購入する個数
+     */
+     abilityAssignment(userAccount, item, purchaseCount) {
+        const profitIncrease = 25;
+
+        item.maxPurchase -= purchaseCount;
+        item.purchaseCount += purchaseCount;
+        userAccount.assetValue -= item.price * purchaseCount;
+        userAccount.hamburgerInfo.profitPerClick += profitIncrease * purchaseCount;
+        console.log(item.purchaseCount);
+    }
+
+
+    /**
+     * 債権,ETF購入処理
+     * @param {UserAccount} userAccount
+     * @return {void}
+     */
+    investmentAssignment(userAccount, item, mainPageRight) {
+        let purchaseCount = parseInt(mainPageRight.querySelector(".bill-input").value);
+        item.purchaseCount += purchaseCount;
+        userAccount.assetValue -= parseInt(item.price * purchaseCount);
+        let total = parseInt(item.price * purchaseCount);
+
+        if (item.itemName === "ETF Stock") {
+            item.totalInvestment += total;
+            // ETFの場合購入の度に購入金額が10%上乗せ
+            item.price += parseInt(item.price * item.profit);
+        }
+        else item.totalBond += total
+    }
+
+    /**
+     * メインページへ戻る
+     * @param {UserAccount} userAccount 
+     * @param {Game} _this_ 
+     */
+    returnMainPage(userAccount, _this_) {
+        _this_.config.mainPage.innerHTML = "";
+        _this_.config.mainPage.append(_this_.createMainPage(userAccount));
+    }
+
 }
 
 

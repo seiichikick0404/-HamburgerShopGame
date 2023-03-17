@@ -402,7 +402,6 @@ class Game {
                 _this_.returnMainPage(userAccount, _this_);
 
             }
-            
         });
 
         detailContainer.append(detailPageTop, detailPageMiddle, detailPageBottom);
@@ -424,25 +423,24 @@ class Game {
         let _this_ = this;
         let purchaseCount = parseInt(mainPageRight.querySelector(".bill-input").value);
         if (item.type === "ability") {
-            
             if (item.maxPurchase - purchaseCount < 0) alert("購入上限数を超えています");
             else _this_.abilityAssignment(userAccount, item, purchaseCount);
 
         } else if (item.type === "investment") {
-            _this_.investmentAssignment(userAccount, item, mainPageRight);
+            _this_.investmentAssignment(userAccount, item, purchaseCount);
 
         } else if (item.type === "realEstate") {
             console.log(item.maxPurchase - purchaseCount);
-
             // todo 不動産購入処理
+            _this_.realEstateAssignment(userAccount, item, purchaseCount);
         }
-
     }
 
 
     /**
      * ability効果の反映
      * @param {UserAccount} userAccount 
+     * @param {Item} item
      * @param {Number} purchaseCount 購入する個数
      */
      abilityAssignment(userAccount, item, purchaseCount) {
@@ -450,22 +448,22 @@ class Game {
 
         item.maxPurchase -= purchaseCount;
         item.purchaseCount += purchaseCount;
-        userAccount.assetValue -= item.price * purchaseCount;
+        userAccount.assetValue -= parseInt(item.price * purchaseCount);
         userAccount.hamburgerInfo.profitPerClick += profitIncrease * purchaseCount;
-        console.log(item.purchaseCount);
     }
 
 
     /**
      * 債権,ETF購入処理
      * @param {UserAccount} userAccount
+     * @param {Item} item
      * @return {void}
      */
-    investmentAssignment(userAccount, item, mainPageRight) {
-        let purchaseCount = parseInt(mainPageRight.querySelector(".bill-input").value);
-        item.purchaseCount += purchaseCount;
-        userAccount.assetValue -= parseInt(item.price * purchaseCount);
+    investmentAssignment(userAccount, item, purchaseCount) {
         let total = parseInt(item.price * purchaseCount);
+        item.purchaseCount += purchaseCount;
+        userAccount.assetValue -= total;
+        
 
         if (item.itemName === "ETF Stock") {
             item.totalInvestment += total;
@@ -473,6 +471,20 @@ class Game {
             item.price += parseInt(item.price * item.profit);
         }
         else item.totalBond += total
+    }
+
+
+    /**
+     * 不動産購入処理
+     * @param {UserAccount} userAccount
+     * @param {Item} item
+     * @return {void}
+     */
+    realEstateAssignment(userAccount, item, purchaseCount) {
+        let total = parseInt(item.price * purchaseCount);
+        item.purchaseCount += purchaseCount;
+        userAccount.assetValue -= total;
+        item.totalRealEstate += total;
     }
 
     /**
@@ -486,6 +498,9 @@ class Game {
     }
 
 }
+
+
+
 
 
 

@@ -1,8 +1,3 @@
-const config = {
-    initialForm: document.getElementById("initial-form"),
-    bankPage: document.getElementById("mainPage")
-}
-
 class UserAccount {
     /**
      * @param {string} name 　　         ユーザー名
@@ -108,47 +103,37 @@ class Game {
         this.config.mainPage.append(this.createMainPage(userAccount));
     }
 
+
     /**
      * ユーザーアカウントにログイン
      * @return {void}
      */
     loginUserAccount() {
-        // デバッグ用
-        // localStorage.removeItem("users");
-        // console.log(JSON.parse(localStorage.getItem("users")));
-        // return;
-
         // 初期化処理
         if (!localStorage.getItem('users')) {
             this.setUsers();
         }
 
-        // 保存されてるusersを取得
-        const userList = JSON.parse(localStorage.getItem("users"));
-        const inputName = document.querySelector(`input[name="userName"]`).value;
-        let userFlag = false;
-        let userAccount;
+        const userList = JSON.parse(localStorage.getItem('users')) || [];
+        const inputName = document.querySelector('input[name="userName"]').value.trim();
 
-        if (inputName === undefined || inputName === null || inputName === "") {
-            alert("名前を入力してください");
+        if (!inputName) {
+          alert('名前を入力してください');
+          return;
+        }
+
+        const userAccount = userList.find(user => user.name === inputName);
+
+        if (userAccount) {
+          this.loginUser = userAccount;
+          alert('ログイン完了。ゲームを開始します');
+          this.config.initialForm.classList.add('d-none');
+          this.config.mainPage.append(this.createMainPage(this.loginUser));
         } else {
-            for (let i = 0; i < userList.length; i++) {
-                if (userList[i].name === inputName) {
-                    this.loginUser = userList[i];
-                    userFlag = true;
-                    userAccount = userList[i];
-                    break;
-                }
-            }
-
-            if (userFlag) {
-                alert("ログイン完了。ゲームを開始します");
-                this.config.initialForm.classList.add("d-none");
-                this.config.mainPage.append(this.createMainPage(userAccount));
-
-            } else alert(inputName + "というユーザーは存在しません。新規登録をしてゲームを開始しよう");
+          alert(inputName + 'というユーザーは存在しません。新規登録をしてゲームを開始しよう');
         }
     }
+
 
     /**
      * 保存処理の初期設定
@@ -164,9 +149,7 @@ class Game {
      * @return {void}
      */
      sellBurger(userAccount) {
-        // 個数を追加
-        userAccount.hamburgerInfo.count += 1;
-        // 売上を資産額に追加
+        userAccount.hamburgerInfo.count++;
         userAccount.assetValue += userAccount.hamburgerInfo.profitPerClick;
     }
 
@@ -203,7 +186,6 @@ class Game {
 
         });
 
-      
 
         // 日数経過処理と年齢経過処理
         setInterval(function(){
@@ -231,9 +213,6 @@ class Game {
                 }
             }
 
-            // 資産額をHTMLに反映
-            // console.log(`資産に追加する額:${total}`);
-            // console.log(`現在の資産額：${userAccount.assetValue}`);
 
             userAccount.assetValue += total;
             mainContainer.querySelector("#totalMoney").innerHTML = `
@@ -268,13 +247,14 @@ class Game {
      * @return {Object}
      */
      createMainPageLeft(userAccount) {
-        let container = document.createElement("div");
+        const {count, profitPerClick} = userAccount.hamburgerInfo;
+        const container = document.createElement("div");
         container.classList.add("col-md-5", "col-12", "m-md-2", "p-1", "px-3", "bg-dark");
         container.setAttribute("id", "mainPageLeft");
         container.innerHTML = `
             <div class="text-center my-3 bg-secondary p-2 text-light">
-                <h5 id="numberOfBurger">${userAccount.hamburgerInfo.count} Burgers</h5>
-                <h5 id="profitPerClick">One click $${userAccount.hamburgerInfo.profitPerClick}</h5>
+                <h5 id="numberOfBurger">${count} Burgers</h5>
+                <h5 id="profitPerClick">One click $${profitPerClick}</h5>
             </div>
             <div class="col-12">
                 <img src="https://cdn.pixabay.com/photo/2014/04/02/17/00/burger-307648_960_720.png" class="burger" id="burgerImg">
@@ -288,6 +268,8 @@ class Game {
      * @return {Object}
      */
     createMainPageRight(userAccount) {
+        const { name, age, days, assetValue } = userAccount;
+
         let mainPageRightContainer = document.createElement("div");
         mainPageRightContainer.classList.add("col-md-7", "col-12", "my-md-2");
         mainPageRightContainer.setAttribute("id", "mainPageRight");
@@ -296,26 +278,21 @@ class Game {
         `
             <div class="bg-dark p-3 text-light">
                 <div class="d-md-flex text-center p-1">
-                    <h5 class="col-md-6 col-12 mx-1 bg-secondary">${userAccount.name}</h5>
-                    <h5 class="col-md-6 col-12 mx-1 bg-secondary" id="age">${userAccount.age} years old</h5>
+                    <h5 class="col-md-6 col-12 mx-1 bg-secondary">${name}</h5>
+                    <h5 class="col-md-6 col-12 mx-1 bg-secondary" id="age">${age} years old</h5>
                 </div>
                 <div class="d-md-flex text-center p-1">
-                    <h5 class="col-md-6 col-12 bg-secondary mx-1" id="days">${userAccount.days} days</h5>
-                    <h5 class="col-md-6 col-12 bg-secondary mx-1" id="totalMoney">$${userAccount.assetValue}</h5>
+                    <h5 class="col-md-6 col-12 bg-secondary mx-1" id="days">${days} days</h5>
+                    <h5 class="col-md-6 col-12 bg-secondary mx-1" id="totalMoney">$${assetValue}</h5>
                 </div>
             </div>
         `;
 
-
-        let mainPageRightBottom = document.createElement("div");
+        const mainPageRightBottom = document.createElement("div");
         mainPageRightBottom.classList.add("scroll", "my-2", "bg-dark");
+        mainPageRightBottom.append(this.createItemList(userAccount));
 
-        let itemsContainer = this.createItemList(userAccount);
-        mainPageRightBottom.append(itemsContainer);
-
-        mainPageRightContainer.innerHTML = `
-        ${mainPageRightTop}
-        `;
+        mainPageRightContainer.innerHTML = `${mainPageRightTop}`;
         mainPageRightContainer.append(mainPageRightBottom);
 
         return mainPageRightContainer;
@@ -329,82 +306,71 @@ class Game {
      * @return {Object}
      */
     createDetailPage(userAccount, itemIndex, mainPageRight) {
-        const item = userAccount.items[itemIndex];
+      const item = userAccount.items[itemIndex];
 
-        let container = document.createElement("div");
-        container.classList.add("bg-danger", "detail-container");
-        let detailContainer = document.createElement("div");
-        detailContainer.classList.add("container", "py-3", "bg-dark", "text-light");
-        container.append(detailContainer);
-
-        // 詳細画面上部
-        let detailPageTop = document.createElement("div");
-        detailPageTop.classList.add("d-flex", "justify-content-between");
-        detailPageTop.innerHTML = `
-        <div class="d-flex justify-content-between">
-            <div>
+      const detailPageHTML = `
+        <div class="bg-danger detail-container">
+          <div class="container py-3 bg-dark text-light">
+            <div class="d-flex justify-content-between">
+              <div>
                 <h3>${item.itemName}</h3>
                 <h5>Max purchases: ${item.maxPurchase}</h5>
                 <h5>Price: ${item.price}</h5>
                 <h5>Get $${item.profit}/sec</h5>
-            </div>
-            <div class="col-5 d-flex justify-content-center align-items-center">
+              </div>
+              <div class="col-5 d-flex justify-content-center align-items-center">
                 <img src="${item.imgUrl}" width="100px" height="100px">
+              </div>
             </div>
+            <div>
+              <h5>How many would you like to buy?</h5>
+              <input class="col-12 bill-input" type="number" min="1" placeholder="0" value="1">
+              <h5 id="buy-total" class="text-right">total: $${item.price}</h5>
+            </div>
+            <div class="d-flex justify-content-around">
+              <button id="btnBack" class="btn btn-light back-btn">Go Back</button>
+              <button id="btnPurchase" class="btn btn-primary purchase-btn">Purchase</button>
+            </div>
+          </div>
         </div>
-        `;
+      `;
 
-        // 詳細画面中部
-        let detailPageMiddle = document.createElement("div");
-        detailPageMiddle.innerHTML = `
-            <h5>How many would you like to buy?</h5>
-            <input class=" col-12 bill-input" type="number" min="1" placeholder="0" value="1">
-            <h5 id="buy-total" class="text-right">total: $${item.price}</h5>
-        `;
+      const container = document.createElement("div");
+      container.innerHTML = detailPageHTML.trim();
 
-        // 詳細画面下部
-        let detailPageBottom = document.createElement("div");
-        detailPageBottom.classList.add("d-flex", "justify-content-around");
-        detailPageBottom.innerHTML = `
-            <button id="btnBack" class="btn btn-light back-btn">Go Back</button>
-            <button id="btnPurchase" class="btn btn-primary purchase-btn">Purchase</button>
-        `;
+      const detailPageMiddle = container.querySelector(".bill-input");
+      const buyTotal = container.querySelector("#buy-total");
+      const btnBack = container.querySelector("#btnBack");
+      const btnPurchase = container.querySelector("#btnPurchase");
 
-        // 合計金額を表示する処理
-        detailPageMiddle.querySelector(".bill-input").addEventListener("change", function(event) {
-            let total = item.price * event.target.value;
-            detailPageMiddle.querySelector("#buy-total").innerHTML = `total: $${total}`;
-        });
+      // 入力値が変更されたときに合計価格を更新する
+      detailPageMiddle.addEventListener("change", function(event) {
+        const total = item.price * event.target.value;
+        buyTotal.innerHTML = `total: $${total}`;
+      });
 
+      const _this_ = this;
+      // 戻るボタンでトップページに戻る
+      btnBack.addEventListener("click", function() {
+        _this_.returnMainPage(userAccount);
+      });
 
-        //戻るボタンでアイテムリストページに戻る
-        detailPageBottom.querySelector("#btnBack").addEventListener("click", function(){
-            _this_.returnMainPage(userAccount);
-        });
+      // 購入ボタンクリックで商品購入
+      btnPurchase.addEventListener("click", function() {
+        const totalText = mainPageRight.querySelector("#buy-total").innerHTML;
+        const total = parseInt(totalText.slice(8));
 
-        // 購入時の処理
-        const _this_ = this;
-        detailPageBottom.querySelector("#btnPurchase").addEventListener("click", function(){
-            let totalText = mainPageRight.querySelector("#buy-total").innerHTML;
-            let total = parseInt(totalText.slice(8));
+        if (userAccount.assetValue < total) {
+          alert("所持金が不足しています");
+        } else {
+          _this_.itemPurchase(userAccount, item, mainPageRight);
+          _this_.returnMainPage(userAccount);
+        }
+      });
 
-            // 所持金が足りない場合
-            if (userAccount.assetValue < total) {
-                alert("所持金が不足しています");
-            } else {
-                // 購入できた場合
-                _this_.itemPurchase(userAccount, item, mainPageRight);
-
-                // メインページに戻る
-                _this_.returnMainPage(userAccount);
-
-            }
-        });
-
-        detailContainer.append(detailPageTop, detailPageMiddle, detailPageBottom);
-
-        return container;
+      return container.firstChild;
     }
+
 
     /**
      * 商品購入時の処理
@@ -414,19 +380,19 @@ class Game {
      * @return {void}
      */
     itemPurchase(userAccount, item,  mainPageRight) {
-        // 商品の効力を反映 能力, 投資、不動産投資
-        let _this_ = this;
+        const purchaseLimitExceeded = () => alert("購入上限数を超えています");
+
         let purchaseCount = parseInt(mainPageRight.querySelector(".bill-input").value);
         if (item.type === "ability") {
-            if (item.maxPurchase - purchaseCount < 0) alert("購入上限数を超えています");
-            else _this_.abilityAssignment(userAccount, item, purchaseCount);
+            if (item.maxPurchase - purchaseCount < 0) purchaseLimitExceeded();
+            else this.abilityAssignment(userAccount, item, purchaseCount);
 
         } else if (item.type === "investment") {
-            _this_.investmentAssignment(userAccount, item, purchaseCount);
+            this.investmentAssignment(userAccount, item, purchaseCount);
 
         } else if (item.type === "realEstate") {
-            if (item.maxPurchase - purchaseCount < 0) alert("購入上限数を超えています");
-            else _this_.realEstateAssignment(userAccount, item, purchaseCount);
+            if (item.maxPurchase - purchaseCount < 0) purchaseLimitExceeded();
+            else this.realEstateAssignment(userAccount, item, purchaseCount);
         }
     }
 
@@ -454,7 +420,7 @@ class Game {
      * @return {void}
      */
     investmentAssignment(userAccount, item, purchaseCount) {
-        let total = parseInt(item.price * purchaseCount);
+        const total = parseInt(item.price * purchaseCount);
         item.purchaseCount += purchaseCount;
         userAccount.assetValue -= total;
 
@@ -474,7 +440,7 @@ class Game {
      * @return {void}
      */
     realEstateAssignment(userAccount, item, purchaseCount) {
-        let total = parseInt(item.price * purchaseCount);
+        const total = parseInt(item.price * purchaseCount);
 
         item.maxPurchase -= purchaseCount;
         item.purchaseCount += purchaseCount;
@@ -489,7 +455,7 @@ class Game {
      * @return {Object}
      */
     createItemList(userAccount) {
-        let items = document.createElement("div");
+        const items = document.createElement("div");
         items.setAttribute("id", "items");
 
         for (let i = 0; i < userAccount.items.length; i++) {
@@ -544,7 +510,6 @@ class Game {
     /**
      * メインページへ戻る
      * @param {UserAccount} userAccount
-     * @param {Object} detailContainer
      * @return {void}
      */
     returnMainPage(userAccount) {
@@ -553,12 +518,7 @@ class Game {
         scroll.querySelector("#items").remove();
         scroll.append(this.createItemList(userAccount));
     }
-
 }
-
-
-
-
 
 
 /**
@@ -579,6 +539,14 @@ function startGame(newOrLogin) {
 
 
 
+
+
+function deleteUsers() {
+    // デバッグ用
+    localStorage.removeItem("users");
+    console.log(JSON.parse(localStorage.getItem("users")));
+    return;
+}
 
 
 

@@ -69,7 +69,6 @@ class Game {
     }
 
     loginUser;
-    
 
     /**
      * ユーザーアカウントの新規作成
@@ -204,6 +203,8 @@ class Game {
 
         });
 
+      
+
         // 日数経過処理と年齢経過処理
         setInterval(function(){
             userAccount.days += 1;
@@ -214,6 +215,32 @@ class Game {
             }
             mainContainer.querySelector("#days").innerHTML = `${userAccount.days} days`;
 
+            // ETF, Bondsの利益反映
+            let total = 0;
+
+
+            for (let i = 1; i < userAccount.items.length; i++) {
+                let item = userAccount.items[i];
+                if (userAccount.items[i].purchaseCount > 0){
+                    // ETF
+                    if (item.itemName === "ETF Stock") total += parseInt(item.totalInvestment * item.profit);
+                    // 債権
+                    if (item.itemName === "ETF Bonds") total += parseInt(item.totalBond * item.profit);
+                    // 不動産
+                    if (item.type === "realEstate") total += parseInt(item.purchaseCount * item.profit);
+                }
+            }
+
+            // 資産額をHTMLに反映
+            // console.log(`資産に追加する額:${total}`);
+            // console.log(`現在の資産額：${userAccount.assetValue}`);
+
+            userAccount.assetValue += total;
+            mainContainer.querySelector("#totalMoney").innerHTML = `
+                $${userAccount.assetValue}
+            `;
+
+
         },1000);
 
         // 商品購入画面
@@ -221,7 +248,9 @@ class Game {
         for (let i = 0; i < itemCards.length; i++) {
             itemCards[i].addEventListener("click", function() {
                 // 商品一覧画面を非表示にする
+                mainPageRight.querySelector("#items").classList.remove("d-block");
                 mainPageRight.querySelector("#items").classList.add("d-none");
+
                 // 詳細ページを作成する
                 let detailPage = _this_.createDetailPage(userAccount, i, mainPageRight);
                 mainPageRight.querySelector(".scroll").append(detailPage);
@@ -280,40 +309,9 @@ class Game {
 
         let mainPageRightBottom = document.createElement("div");
         mainPageRightBottom.classList.add("scroll", "my-2", "bg-dark");
-        let items = document.createElement("div");
-        items.setAttribute("id", "items");
-        mainPageRightBottom.append(items);
 
-
-        for (let i = 0; i < userAccount.items.length; i++) {
-            let clickOrs = i < 1 ? "click" : "s";
-            let item = document.createElement("div");
-            item.classList.add("item-card-box", "d-md-flex", "bg-dark", "text-light", "p-3");
-            item.innerHTML = `
-                <div class="col-md-2 d-md-block d-none">
-                    <img src="${userAccount.items[i].imgUrl}" class="img-fluid itemImg col-md-12">
-                </div>
-                <div class="col-md-6 col-12">
-                    <div class="justify-content-center d-md-flex">
-                        <h5>${userAccount.items[i].itemName}</h5>
-                    </div>
-                    <div class="justify-content-center d-md-flex">
-                        <h5>$${userAccount.items[i].price}</h5>
-                    </div>
-                </div>
-                <div class="col-md-4 col-12">
-                    <div class="justify-content-center d-md-flex">
-                        <h5>${userAccount.items[i].purchaseCount}</h5>
-                    </div>
-                    <div class="justify-content-center d-md-flex">
-                        <h5>$${userAccount.items[i].profit} /${clickOrs}</h5>
-                    </div>
-                </div>
-            `;
-
-            items.append(item);
-        }
-
+        let itemsContainer = this.createItemList(userAccount);
+        mainPageRightBottom.append(itemsContainer);
 
         mainPageRightContainer.innerHTML = `
         ${mainPageRightTop}
@@ -334,7 +332,7 @@ class Game {
         const item = userAccount.items[itemIndex];
 
         let container = document.createElement("div");
-        container.classList.add("bg-danger");
+        container.classList.add("bg-danger", "detail-container");
         let detailContainer = document.createElement("div");
         detailContainer.classList.add("container", "py-3", "bg-dark", "text-light");
         container.append(detailContainer);
@@ -381,13 +379,12 @@ class Game {
 
         //戻るボタンでアイテムリストページに戻る
         detailPageBottom.querySelector("#btnBack").addEventListener("click", function(){
-            _this_.returnMainPage(userAccount, _this_);
+            _this_.returnMainPage(userAccount);
         });
 
         // 購入時の処理
         const _this_ = this;
         detailPageBottom.querySelector("#btnPurchase").addEventListener("click", function(){
-            console.log("ボタンがクリックされました");
             let totalText = mainPageRight.querySelector("#buy-total").innerHTML;
             let total = parseInt(totalText.slice(8));
 
@@ -399,7 +396,7 @@ class Game {
                 _this_.itemPurchase(userAccount, item, mainPageRight);
 
                 // メインページに戻る
-                _this_.returnMainPage(userAccount, _this_);
+                _this_.returnMainPage(userAccount);
 
             }
         });
@@ -411,9 +408,9 @@ class Game {
 
     /**
      * 商品購入時の処理
-     * @param {UserAccount} userAccount 
+     * @param {UserAccount} userAccount
      * @param {Item} item
-     * @param {Object} mainPageRight 
+     * @param {Object} mainPageRight
      * @return {void}
      */
     itemPurchase(userAccount, item,  mainPageRight) {
@@ -436,7 +433,7 @@ class Game {
 
     /**
      * ability効果の反映
-     * @param {UserAccount} userAccount 
+     * @param {UserAccount} userAccount
      * @param {Item} item
      * @param {Number} purchaseCount 購入する個数
      */
@@ -485,14 +482,76 @@ class Game {
         item.totalRealEstate += total;
     }
 
+
+    /**
+     * アイテム一覧を作成
+     * @param {UserAccount} userAccount
+     * @return {Object}
+     */
+    createItemList(userAccount) {
+        let items = document.createElement("div");
+        items.setAttribute("id", "items");
+
+        for (let i = 0; i < userAccount.items.length; i++) {
+            let clickOrs = i < 1 ? "click" : "s";
+            let item = document.createElement("div");
+            item.classList.add("item-card-box", "d-md-flex", "bg-dark", "text-light", "p-3");
+            item.innerHTML = `
+                <div class="col-md-2 d-md-block d-none">
+                    <img src="${userAccount.items[i].imgUrl}" class="img-fluid itemImg col-md-12">
+                </div>
+                <div class="col-md-6 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>${userAccount.items[i].itemName}</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$${userAccount.items[i].price}</h5>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12">
+                    <div class="justify-content-center d-md-flex">
+                        <h5>${userAccount.items[i].purchaseCount}</h5>
+                    </div>
+                    <div class="justify-content-center d-md-flex">
+                        <h5>$${userAccount.items[i].profit} /${clickOrs}</h5>
+                    </div>
+                </div>
+            `;
+
+            items.append(item);
+        }
+
+        const itemCards = items.querySelectorAll(".item-card-box");
+        const _this_ = this;
+        const mainPageRight =  document.querySelector("#mainPageRight");
+        if (mainPageRight) {
+            for (let i = 0; i < itemCards.length; i++) {
+                itemCards[i].addEventListener("click", function() {
+                    // 商品一覧画面を非表示にする
+                    mainPageRight.querySelector("#items").classList.remove("d-block");
+                    mainPageRight.querySelector("#items").classList.add("d-none");
+
+                    // 詳細ページを作成する
+                    let detailPage = _this_.createDetailPage(userAccount, i, mainPageRight);
+                    mainPageRight.querySelector(".scroll").append(detailPage);
+                });
+            }
+        }
+
+        return items;
+    }
+
     /**
      * メインページへ戻る
      * @param {UserAccount} userAccount
-     * @param {Game} _this_
+     * @param {Object} detailContainer
+     * @return {void}
      */
-    returnMainPage(userAccount, _this_) {
-        _this_.config.mainPage.innerHTML = "";
-        _this_.config.mainPage.append(_this_.createMainPage(userAccount));
+    returnMainPage(userAccount) {
+        const scroll =  document.querySelector(".scroll");
+        scroll.querySelector(".detail-container").remove();
+        scroll.querySelector("#items").remove();
+        scroll.append(this.createItemList(userAccount));
     }
 
 }

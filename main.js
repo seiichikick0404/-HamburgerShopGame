@@ -162,7 +162,7 @@ class Game {
         let container = document.createElement("div");
         container.classList.add("vh-100", "d-md-flex", "justify-content-center", "container");
         let mainContainer = document.createElement("div");
-        mainContainer.classList.add("bg-secondary", "col-md-11", "col-12", "d-md-flex", "p-5", "m-md-4");
+        mainContainer.classList.add("main-container", "bg-secondary", "col-md-11", "col-12", "d-md-flex", "p-5", "m-md-4");
         container.append(mainContainer);
 
         // 左半分を作成
@@ -173,18 +173,8 @@ class Game {
 
         mainContainer.append(mainPageLeft, mainPageRight);
 
-        const burgerImg = mainContainer.querySelector("#burgerImg");
-        let _this_ = this /* thisを_this_に代入 */
-        burgerImg.addEventListener("click", function() {
-            // ハンバーガーを1つ売る
-            _this_.sellBurger(userAccount);
 
-            // 更新した内容を反映させる
-            mainContainer.querySelector("#numberOfBurger").innerHTML =`${userAccount.hamburgerInfo.count} Burgers`;
-            mainContainer.querySelector("#profitPerClick").innerHTML =`One click $${userAccount.hamburgerInfo.profitPerClick}`;
-            mainContainer.querySelector("#totalMoney").innerHTML = `$${userAccount.assetValue}`;
-
-        });
+        this.hamburgerClickEvent(userAccount, mainContainer);
 
 
         // 日数経過処理と年齢経過処理
@@ -223,6 +213,7 @@ class Game {
         },1000);
 
         // 商品購入画面
+        const _this_ = this;
         const itemCards = mainContainer.querySelectorAll(".item-card-box");
         for (let i = 0; i < itemCards.length; i++) {
             itemCards[i].addEventListener("click", function() {
@@ -507,16 +498,37 @@ class Game {
         return items;
     }
 
+    hamburgerClickEvent(userAccount, mainContainer){
+        const burgerImg = mainContainer.querySelector("#burgerImg");
+        let _this_ = this /* thisを_this_に代入 */
+        burgerImg.addEventListener("click", function() {
+            // ハンバーガーを1つ売る
+            _this_.sellBurger(userAccount);
+
+            // 更新した内容を反映させる
+            mainContainer.querySelector("#numberOfBurger").innerHTML =`${userAccount.hamburgerInfo.count} Burgers`;
+            mainContainer.querySelector("#profitPerClick").innerHTML =`One click $${userAccount.hamburgerInfo.profitPerClick}`;
+            mainContainer.querySelector("#totalMoney").innerHTML = `$${userAccount.assetValue}`;
+        });
+    }
+
     /**
      * メインページへ戻る
      * @param {UserAccount} userAccount
      * @return {void}
      */
     returnMainPage(userAccount) {
+        // 一覧ページの更新
         const scroll =  document.querySelector(".scroll");
         scroll.querySelector(".detail-container").remove();
         scroll.querySelector("#items").remove();
         scroll.append(this.createItemList(userAccount));
+        // 左ページの更新
+        const mainContainer = document.querySelector(".main-container");
+        document.querySelector("#mainPageLeft").remove();
+        document.querySelector(".main-container").prepend(this.createMainPageLeft(userAccount));
+        this.hamburgerClickEvent(userAccount, mainContainer);
+
     }
 }
 

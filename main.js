@@ -384,7 +384,12 @@ class Game {
 
         const saveBtn = btnDiv.querySelector(".save-btn");
         saveBtn.addEventListener("click", function() {
-            _this_.saveUserAccount(userAccount);
+            _this_.saveUserAccountData(userAccount);
+        });
+
+        const resetBtn = btnDiv.querySelector(".reset-btn");
+        resetBtn.addEventListener("click", function() {
+            _this_.resetUserAccountData(userAccount);
         });
 
         return btnDiv;
@@ -530,8 +535,9 @@ class Game {
     /**
      * 現在の進行状況を保存
      * @param {UserAccount} userAccount
+     * @return {void}
      */
-    saveUserAccount(userAccount) {
+    saveUserAccountData(userAccount) {
         const userList = JSON.parse(localStorage.getItem('users')) || [];
 
         for (let i = 0; i < userList.length; i++) {
@@ -543,6 +549,46 @@ class Game {
 
         localStorage.setItem("users", JSON.stringify(userList));
         alert("データの保存が完了しました");
+    }
+
+    /**
+     * データをリセット
+     * @param {UserAccount} userAccount 
+     * @return {void}
+     */
+    resetUserAccountData(userAccount) {
+        // ユーザーデータの初期化
+        userAccount.age = 20;
+        userAccount.days = 0;
+        userAccount.assetValue = 50000;
+
+        // アイテムデータの初期化
+        const items = [
+            new Item("Flip machine", "ability", 15000, "https://cdn.pixabay.com/photo/2019/06/30/20/09/grill-4308709_960_720.png", 0, 25, 500, 0, 0, 0),
+            new Item("ETF Stock", "investment", 300000, "https://cdn.pixabay.com/photo/2016/03/31/20/51/chart-1296049_960_720.png", 0, 0.1, Infinity, 0, 0, 0),
+            new Item("ETF Bonds", "investment", 300000, "https://cdn.pixabay.com/photo/2016/03/31/20/51/chart-1296049_960_720.png", 0, 0.07, Infinity, 0, 0, 0),
+            new Item("Lemonade Stand", "realEstate", 30000, "https://cdn.pixabay.com/photo/2012/04/15/20/36/juice-35236_960_720.png", 0, 30, 1000, 0, 0, 0),
+            new Item("Ice Cream Truck", "realEstate", 100000, "https://cdn.pixabay.com/photo/2020/01/30/12/37/ice-cream-4805333_960_720.png", 0, 120, 500, 0, 0, 0),
+            new Item("House", "realEstate", 20000000, "	https://cdn.pixabay.com/photo/2016/03/31/18/42/home-1294564_960_720.png", 0, 32000, 100, 0, 0, 0),
+            new Item("TownHouse", "realEstate", 40000000, "https://cdn.pixabay.com/photo/2019/06/15/22/30/modern-house-4276598_960_720.png", 0, 64000, 100, 0, 0, 0),
+            new Item("Mansion", "realEstate", 250000000, "	https://cdn.pixabay.com/photo/2017/10/30/20/52/condominium-2903520_960_720.png", 0, 500000, 20, 0, 0, 0),
+            new Item("Industrial Space", "realEstate", 1000000000, "https://cdn.pixabay.com/photo/2012/05/07/17/35/factory-48781_960_720.png", 0, 2200000, 10, 0, 0, 0),
+            new Item("Hotel Skyscraper", "realEstate", 10000000000, "https://cdn.pixabay.com/photo/2012/05/07/18/03/skyscrapers-48853_960_720.png", 0, 25000000, 5, 0, 0, 0),
+            new Item("Bullet-Speed Sky Railway", "realEstate", 10000000000000, "https://cdn.pixabay.com/photo/2013/07/13/10/21/train-157027_960_720.png", 0, 30000000000, 1, 0, 0, 0),
+        ];
+        userAccount.items = items;
+
+        // ハンバーガーデータの初期化
+        userAccount.hamburgerInfo = new Hamburger(0, 25);
+
+        const userList = JSON.parse(localStorage.getItem('users')) || [];
+        const loginUserIndex = userList.findIndex(user => user.name === userAccount.name);
+        if (loginUserIndex !== -1) {
+            userList[loginUserIndex] = userAccount;
+            localStorage.setItem("users", JSON.stringify(userList));
+            this.config.mainPage.innerHTML = "";
+            this.config.mainPage.append(this.createMainPage(userAccount));
+        }
     }
 
 

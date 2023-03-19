@@ -166,10 +166,13 @@ class Game {
         container.append(mainContainer);
 
         // 左半分を作成
-        let mainPageLeft = this.createMainPageLeft(userAccount);
+        const mainPageLeft = this.createMainPageLeft(userAccount);
 
         // 右半分を作成
-        let mainPageRight = this.createMainPageRight(userAccount);
+        const mainPageRight = this.createMainPageRight(userAccount);
+
+        
+
 
         mainContainer.append(mainPageLeft, mainPageRight);
 

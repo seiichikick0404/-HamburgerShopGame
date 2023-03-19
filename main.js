@@ -171,7 +171,8 @@ class Game {
         // 右半分を作成
         const mainPageRight = this.createMainPageRight(userAccount);
 
-        
+        // 各種ボタンコンテナを作成
+        mainPageRight.append(this.createMainPageBtn(userAccount))
 
 
         mainContainer.append(mainPageLeft, mainPageRight);
@@ -367,6 +368,30 @@ class Game {
 
 
     /**
+     * ボタンコンテナ作成
+     * @param {UserAccount} userAccount
+     * @return {Object}
+     */
+    createMainPageBtn(userAccount) {
+        const btnDiv = document.createElement("div");
+        btnDiv.classList.add("text-right", "btn-box");
+        btnDiv.innerHTML = `
+            <button class="btn btn-info reset-btn">reset</button>
+            <button class="btn btn-info save-btn">save</button>
+        `;
+
+        const _this_ = this;
+
+        const saveBtn = btnDiv.querySelector(".save-btn");
+        saveBtn.addEventListener("click", function() {
+            _this_.saveUserAccount(userAccount);
+        });
+
+        return btnDiv;
+    }
+
+
+    /**
      * 商品購入時の処理
      * @param {UserAccount} userAccount
      * @param {Item} item
@@ -501,11 +526,36 @@ class Game {
         return items;
     }
 
+
+    /**
+     * 現在の進行状況を保存
+     * @param {UserAccount} userAccount
+     */
+    saveUserAccount(userAccount) {
+        const userList = JSON.parse(localStorage.getItem('users')) || [];
+
+        for (let i = 0; i < userList.length; i++) {
+            if (userList[i].name === userAccount.name){
+                userList[i] = userAccount;
+                break;
+            }
+        }
+
+        localStorage.setItem("users", JSON.stringify(userList));
+        alert("データの保存が完了しました");
+    }
+
+
+    /**
+     * ハンバーガークリックイベント
+     * @param {UserAccount} userAccount
+     * @param {Object} mainContainer
+     */
     hamburgerClickEvent(userAccount, mainContainer){
         const burgerImg = mainContainer.querySelector("#burgerImg");
-        let _this_ = this /* thisを_this_に代入 */
+        const _this_ = this
         burgerImg.addEventListener("click", function() {
-            // ハンバーガーを1つ売る
+
             _this_.sellBurger(userAccount);
 
             // 更新した内容を反映させる
@@ -531,7 +581,6 @@ class Game {
         document.querySelector("#mainPageLeft").remove();
         document.querySelector(".main-container").prepend(this.createMainPageLeft(userAccount));
         this.hamburgerClickEvent(userAccount, mainContainer);
-
     }
 }
 
@@ -554,12 +603,11 @@ function startGame(newOrLogin) {
 
 
 
-
-
 function deleteUsers() {
     // デバッグ用
     localStorage.removeItem("users");
     console.log(JSON.parse(localStorage.getItem("users")));
+    alert("初期化完了");
     return;
 }
 

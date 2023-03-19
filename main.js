@@ -75,6 +75,19 @@ class Game {
             this.setUsers();
         }
 
+
+        // 重複データは登録できない
+        const userName = document.querySelector(`input[name="userName"]`).value;
+        const userList = JSON.parse(localStorage.getItem('users')) || [];
+        for (let i = 0; i < userList.length; i++) {
+            if (userList[i].name === userName) {
+                duplicateFlag = true;
+                alert("このユーザネームは既に存在します");
+                return;
+            }
+        }
+
+
         const items = [
             new Item("Flip machine", "ability", 15000, "https://cdn.pixabay.com/photo/2019/06/30/20/09/grill-4308709_960_720.png", 0, 25, 500, 0, 0, 0),
             new Item("ETF Stock", "investment", 300000, "https://cdn.pixabay.com/photo/2016/03/31/20/51/chart-1296049_960_720.png", 0, 0.1, Infinity, 0, 0, 0),
@@ -90,7 +103,6 @@ class Game {
         ];
 
         const savedUsers = JSON.parse(localStorage.getItem('users'));
-        const userName = document.querySelector(`input[name="userName"]`).value;
         const userAccount = new UserAccount(userName, 20, 0, 50000, new Hamburger(0, 25), items);
         this.loginUser = userAccount;
 
@@ -644,7 +656,6 @@ function startGame(newOrLogin) {
         game.loginUserAccount();
     }
 }
-
 
 
 

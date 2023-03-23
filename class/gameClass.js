@@ -122,7 +122,7 @@ export class Game {
         let container = document.createElement("div");
         container.classList.add("vh-100", "d-md-flex", "justify-content-center", "container");
         let mainContainer = document.createElement("div");
-        mainContainer.classList.add("main-container", "bg-secondary", "col-md-11", "col-12", "d-md-flex", "p-5", "m-md-4");
+        mainContainer.classList.add("main-container", "bg-navy", "col-md-11", "col-12", "d-md-flex", "p-5", "m-md-4");
         container.append(mainContainer);
 
         // 左半分を作成
@@ -207,7 +207,7 @@ export class Game {
         container.classList.add("col-md-5", "col-12", "m-md-2", "p-1", "px-3", "bg-dark");
         container.setAttribute("id", "mainPageLeft");
         container.innerHTML = `
-            <div class="text-center my-3 bg-secondary p-2 text-light">
+            <div class="text-center my-3 bg-navy p-2 text-light">
                 <h5 id="numberOfBurger">${count} Burgers</h5>
                 <h5 id="profitPerClick">One click $${profitPerClick}</h5>
             </div>
@@ -233,12 +233,12 @@ export class Game {
         `
             <div class="bg-dark p-3 text-light">
                 <div class="d-md-flex text-center p-1">
-                    <h5 class="col-md-6 col-12 mx-1 bg-secondary">${name}</h5>
-                    <h5 class="col-md-6 col-12 mx-1 bg-secondary" id="age">${age} years old</h5>
+                    <h5 class="col-md-6 col-12 mx-1 bg-navy">${name}</h5>
+                    <h5 class="col-md-6 col-12 mx-1 bg-navy" id="age">${age} years old</h5>
                 </div>
                 <div class="d-md-flex text-center p-1">
-                    <h5 class="col-md-6 col-12 bg-secondary mx-1" id="days">${days} days</h5>
-                    <h5 class="col-md-6 col-12 bg-secondary mx-1" id="totalMoney">$${assetValue}</h5>
+                    <h5 class="col-md-6 col-12 bg-navy mx-1" id="days">${days} days</h5>
+                    <h5 class="col-md-6 col-12 bg-navy mx-1" id="totalMoney">$${assetValue}</h5>
                 </div>
             </div>
         `;
@@ -463,7 +463,7 @@ export class Game {
                         <h5>${userAccount.items[i].purchaseCount}</h5>
                     </div>
                     <div class="justify-content-center d-md-flex">
-                        <h5>$${userAccount.items[i].profit} /${clickOrs}</h5>
+                        <h5 class="clickOrs">$${userAccount.items[i].profit} /${clickOrs}</h5>
                     </div>
                 </div>
             `;

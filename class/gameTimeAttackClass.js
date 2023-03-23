@@ -145,7 +145,7 @@ export class GameTimeAttack {
         let container = document.createElement("div");
         container.classList.add("vh-100", "d-md-flex", "justify-content-center", "container");
         let mainContainer = document.createElement("div");
-        mainContainer.classList.add("main-container", "bg-secondary", "col-md-11", "col-12", "d-md-flex", "p-5", "m-md-4");
+        mainContainer.classList.add("main-container", "bg-navy", "col-md-11", "col-12", "d-md-flex", "p-5", "m-md-4");
         container.append(mainContainer);
 
         // 左半分を作成
@@ -233,7 +233,7 @@ export class GameTimeAttack {
         container.classList.add("col-md-5", "col-12", "m-md-2", "p-1", "px-3", "bg-dark");
         container.setAttribute("id", "mainPageLeft");
         container.innerHTML = `
-            <div class="text-center my-3 bg-secondary p-2 text-light">
+            <div class="text-center my-3 bg-navy p-2 text-light">
                 <h5 id="numberOfBurger">${count} Burgers</h5>
                 <h5 id="profitPerClick">One click $${profitPerClick}</h5>
             </div>
@@ -259,12 +259,12 @@ export class GameTimeAttack {
         `
             <div class="bg-dark p-3 text-light">
                 <div class="d-md-flex text-center p-1">
-                    <h5 class="col-md-6 col-12 mx-1 bg-secondary">${name}</h5>
-                    <h5 class="col-md-6 col-12 mx-1 bg-secondary" id="age">${age} years old</h5>
+                    <h5 class="col-md-6 col-12 mx-1 bg-navy">${name}</h5>
+                    <h5 class="col-md-6 col-12 mx-1 bg-navy" id="age">${age} years old</h5>
                 </div>
                 <div class="d-md-flex text-center p-1">
-                    <h5 class="col-md-6 col-12 bg-secondary mx-1" id="days">${days} days</h5>
-                    <h5 class="col-md-6 col-12 bg-secondary mx-1" id="totalMoney">$${assetValue}</h5>
+                    <h5 class="col-md-6 col-12 bg-navy mx-1" id="days">${days} days</h5>
+                    <h5 class="col-md-6 col-12 bg-navy mx-1" id="totalMoney">$${assetValue}</h5>
                 </div>
             </div>
         `;
@@ -390,12 +390,12 @@ export class GameTimeAttack {
         const container = document.createElement("div");
         container.classList.add("text-center");
         container.innerHTML = `
-        <div class="container">
-            <h2>Count Down!!</h2>
+        <div class="container timer-box bg-dark">
+            <h2 class="countdown-title">Count Down!!</h2>
             <div class="row">
                 <div class="mx-auto">
-                    <div id="timer">
-                        <span id="minutes">5</span>:<span id="seconds">00</span>
+                    <div id="timer" class="bg-navy">
+                        <span class="timer-text" id="minutes">5</span><span class="timer-text">:</span><span class="timer-text" id="seconds">00</span>
                     </div>
                 </div>
             <div class="row">

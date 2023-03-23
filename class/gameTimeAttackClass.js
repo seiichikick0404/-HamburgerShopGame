@@ -3,8 +3,8 @@ import { UserAccount } from './userAccountClass.js';
 import { Hamburger } from './hamburgerClass.js';
 
 
-
-export class Game {
+// Todo 独自の仕様に変更
+export class GameTimeAttack {
 
     config = {
         initialForm: document.getElementById("initial-form"),
@@ -84,6 +84,29 @@ export class Game {
         }
 
         const userAccount = userList.find(user => user.name === inputName);
+         // ユーザーデータの初期化
+        userAccount.age = 20;
+        userAccount.days = 0;
+        userAccount.assetValue = 50000;
+
+        // アイテムデータの初期化
+        const items = [
+            new Item("Flip machine", "ability", 15000, "https://cdn.pixabay.com/photo/2019/06/30/20/09/grill-4308709_960_720.png", 0, 25, 500, 0, 0, 0),
+            new Item("ETF Stock", "investment", 300000, "https://cdn.pixabay.com/photo/2016/03/31/20/51/chart-1296049_960_720.png", 0, 0.1, Infinity, 0, 0, 0),
+            new Item("ETF Bonds", "investment", 300000, "https://cdn.pixabay.com/photo/2016/03/31/20/51/chart-1296049_960_720.png", 0, 0.07, Infinity, 0, 0, 0),
+            new Item("Lemonade Stand", "realEstate", 30000, "https://cdn.pixabay.com/photo/2012/04/15/20/36/juice-35236_960_720.png", 0, 30, 1000, 0, 0, 0),
+            new Item("Ice Cream Truck", "realEstate", 100000, "https://cdn.pixabay.com/photo/2020/01/30/12/37/ice-cream-4805333_960_720.png", 0, 120, 500, 0, 0, 0),
+            new Item("House", "realEstate", 20000000, "	https://cdn.pixabay.com/photo/2016/03/31/18/42/home-1294564_960_720.png", 0, 32000, 100, 0, 0, 0),
+            new Item("TownHouse", "realEstate", 40000000, "https://cdn.pixabay.com/photo/2019/06/15/22/30/modern-house-4276598_960_720.png", 0, 64000, 100, 0, 0, 0),
+            new Item("Mansion", "realEstate", 250000000, "	https://cdn.pixabay.com/photo/2017/10/30/20/52/condominium-2903520_960_720.png", 0, 500000, 20, 0, 0, 0),
+            new Item("Industrial Space", "realEstate", 1000000000, "https://cdn.pixabay.com/photo/2012/05/07/17/35/factory-48781_960_720.png", 0, 2200000, 10, 0, 0, 0),
+            new Item("Hotel Skyscraper", "realEstate", 10000000000, "https://cdn.pixabay.com/photo/2012/05/07/18/03/skyscrapers-48853_960_720.png", 0, 25000000, 5, 0, 0, 0),
+            new Item("Bullet-Speed Sky Railway", "realEstate", 10000000000000, "https://cdn.pixabay.com/photo/2013/07/13/10/21/train-157027_960_720.png", 0, 30000000000, 1, 0, 0, 0),
+        ];
+        userAccount.items = items;
+
+        // ハンバーガーデータの初期化
+        userAccount.hamburgerInfo = new Hamburger(0, 25);
 
         if (userAccount) {
           this.loginUser = userAccount;
@@ -133,7 +156,10 @@ export class Game {
         const mainPageRight = this.createMainPageRight(userAccount);
 
         // 各種ボタンコンテナを作成
-        mainPageRight.append(this.createMainPageBtn(userAccount))
+        //mainPageRight.append(this.createMainPageBtn(userAccount))
+
+        // カウントダウンタイマー作成
+        mainPageRight.append(this.createCountDownTimer(userAccount));
 
 
         mainContainer.append(mainPageLeft, mainPageRight);
@@ -354,6 +380,85 @@ export class Game {
         });
 
         return btnDiv;
+    }
+
+    /**
+     * カウントダウンタイマー作成
+     * @param {UserAccount} userAccount
+     * @return {Object}
+     */
+    createCountDownTimer(userAccount) {
+        const container = document.createElement("div");
+        container.classList.add("text-center");
+        container.innerHTML = `
+        <div class="container">
+            <h2>Count Down!!</h2>
+            <div class="row">
+                <div class="mx-auto">
+                    <div id="timer">
+                        <span id="minutes">5</span>:<span id="seconds">00</span>
+                    </div>
+                </div>
+            <div class="row">
+        </div>
+        `;
+
+        // カウントダウン処理
+        var count = 5; // 5 minutes in seconds
+        var timerId = null;
+
+        const _this_ = this;
+		timerId = setInterval(function() {
+			var minutes = Math.floor(count / 60);
+			var seconds = count % 60;
+
+			document.getElementById("minutes").innerHTML = minutes;
+			document.getElementById("seconds").innerHTML = ("0" + seconds).slice(-2);
+
+			if (count == 0) {
+                // カウント描画を停止する
+                clearInterval(timerId);
+                const modalContainer = document.createElement("div");
+                // 現在の総資産
+                modalContainer.innerHTML = `
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Result view</h5>
+                            </div>
+                            <div class="modal-body">
+                                <h2>お疲れ様です !!</h2>
+                                <h2>あなたの総資産は${userAccount.assetValue}ドルです</h2>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="close-btn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+                _this_.config.mainPage.append(modalContainer);
+
+                document.getElementById('staticBackdrop').classList.add('show');
+                document.getElementById('staticBackdrop').style.display = 'block';
+                var backdrop = document.createElement('div');
+                backdrop.classList.add('modal-backdrop', 'fade', 'show');
+                document.body.appendChild(backdrop);
+
+                // リザルトボタンが押された際の処理
+                modalContainer.querySelector("#close-btn").addEventListener("click", function() {
+                    window.location.reload();
+                });
+			}
+
+
+			count--;
+		}, 1000);
+
+
+
+        return container;
     }
 
 

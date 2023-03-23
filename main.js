@@ -1,4 +1,5 @@
 import { Game } from './class/gameClass.js';
+import { GameTimeAttack } from './class/gameTimeAttackClass.js';
 
 
 
@@ -9,7 +10,11 @@ import { Game } from './class/gameClass.js';
  * @return {void}
  */
 window.startGame = (newOrLogin) => {
-    const game = new Game();
+    let selectElement = document.getElementById("select");
+    let selectedOption = selectElement.options[selectElement.selectedIndex];
+    const selectedValue = selectedOption.value;
+
+    const game = getRule(selectedValue);
     if (newOrLogin === "new") {
         game.initializeUserAccount();
     } else if (newOrLogin === "login") {
@@ -20,8 +25,10 @@ window.startGame = (newOrLogin) => {
 function getRule(inputRule) {
     if (inputRule === "normal") {
         console.log("ノーマルモードで開始");
-    } else if (inputRule === "timeAttack") {
+        return new Game();
+    } else if (inputRule === "time") {
         console.log("タイムアタックモード");
+        return new GameTimeAttack();
     }
 }
 

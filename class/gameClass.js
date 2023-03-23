@@ -30,7 +30,6 @@ export class Game {
         const userList = JSON.parse(localStorage.getItem('users')) || [];
         for (let i = 0; i < userList.length; i++) {
             if (userList[i].name === userName) {
-                duplicateFlag = true;
                 alert("このユーザネームは既に存在します");
                 return;
             }

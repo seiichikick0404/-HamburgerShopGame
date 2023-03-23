@@ -26,7 +26,7 @@ function getRule(inputRule) {
     if (inputRule === "normal") {
         console.log("ノーマルモードで開始");
         return new Game();
-    } else if (inputRule === "time") {
+    } else if (inputRule === "countDown") {
         console.log("タイムアタックモード");
         return new GameTimeAttack();
     }

@@ -403,7 +403,7 @@ export class GameTimeAttack {
         `;
 
         // カウントダウン処理
-        var count = 5; // 5 minutes in seconds
+        var count = 300; // 5 minutes in seconds
         var timerId = null;
 
         const _this_ = this;

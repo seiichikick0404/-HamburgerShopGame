@@ -24,9 +24,15 @@ export class Game {
             this.setUsers();
         }
 
+        // 空欄の場合は戻す
+        const userName = document.querySelector(`input[name="userName"]`).value;
+        if (userName === "" || userName === undefined) {
+            alert("ユーザー名を入力して下さい");
+            return;
+        }
+
 
         // 重複データは登録できない
-        const userName = document.querySelector(`input[name="userName"]`).value;
         const userList = JSON.parse(localStorage.getItem('users')) || [];
         for (let i = 0; i < userList.length; i++) {
             if (userList[i].name === userName) {
@@ -78,7 +84,7 @@ export class Game {
         const inputName = document.querySelector('input[name="userName"]').value.trim();
 
         if (!inputName) {
-          alert('名前を入力してください');
+          alert('ユーザー名を入力してください');
           return;
         }
 

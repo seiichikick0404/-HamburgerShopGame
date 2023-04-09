@@ -140,6 +140,10 @@ export class Game {
         // 各種ボタンコンテナを作成
         mainPageRight.append(this.createMainPageBtn(userAccount))
 
+        // イベントモーダルを作成
+        events = [new StockPriceRiseEvent(), new StockPriceCrashEvent()];
+        eventManager = new EventManager(events);
+        this.createEvent(userAccount, eventManager);
 
         mainContainer.append(mainPageLeft, mainPageRight);
 
@@ -225,6 +229,7 @@ export class Game {
     }
 
     /**
+     * 右半分を作成
      * @param {UserAccount} userAccount
      * @return {Object}
      */
@@ -359,6 +364,18 @@ export class Game {
         });
 
         return btnDiv;
+    }
+
+    /**
+     * ランダムイベント作成
+     * @param {UserAccount} userAccount
+     */
+    createEvent(userAccount, eventManager) {
+        currEvent = eventManager.getRandomEvent();
+        // イベントの実行
+        currEvent.execute(userAccount);
+        // イベント告知モーダルの作成
+        eventModal = eventManager.createEventModal(currEvent);
     }
 
 

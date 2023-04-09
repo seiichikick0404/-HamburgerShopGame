@@ -1,5 +1,5 @@
 // イベント管理クラス
-class EventManager {
+export class EventManager {
     constructor (events) {
         this.events = events;
     }

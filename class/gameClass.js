@@ -1,6 +1,9 @@
 import { Item } from './itemClass.js';
 import { UserAccount } from './userAccountClass.js';
 import { Hamburger } from './hamburgerClass.js';
+import {StockPriceRiseEvent} from './stockPriceRiseEventClass.js';
+import {StockPriceCrashEvent} from './stockPriceCrashEventClass.js';
+import {EventManager} from './eventManagerClass.js';
 
 
 
@@ -141,8 +144,8 @@ export class Game {
         mainPageRight.append(this.createMainPageBtn(userAccount))
 
         // イベントモーダルを作成
-        events = [new StockPriceRiseEvent(), new StockPriceCrashEvent()];
-        eventManager = new EventManager(events);
+        const events = [new StockPriceRiseEvent(), new StockPriceCrashEvent()];
+        const eventManager = new EventManager(events);
         this.createEvent(userAccount, eventManager);
 
         mainContainer.append(mainPageLeft, mainPageRight);
@@ -371,11 +374,11 @@ export class Game {
      * @param {UserAccount} userAccount
      */
     createEvent(userAccount, eventManager) {
-        currEvent = eventManager.getRandomEvent();
+        const currEvent = eventManager.getRandomEvent();
         // イベントの実行
-        currEvent.execute(userAccount);
-        // イベント告知モーダルの作成
-        eventModal = eventManager.createEventModal(currEvent);
+        // currEvent.execute(userAccount);
+        // // イベント告知モーダルの作成
+        // eventModal = eventManager.createEventModal(currEvent);
     }
 
 

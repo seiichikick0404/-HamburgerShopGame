@@ -1,7 +1,6 @@
 // イベントクラスの基底クラス
-class Event {
-    constructor(name, description, probability) {
-      this.name = name;
+export class Event {
+    constructor(description, probability) {
       this.description = description;
       this.probability = probability;
     }

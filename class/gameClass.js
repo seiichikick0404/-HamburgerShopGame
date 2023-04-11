@@ -376,8 +376,8 @@ export class Game {
     createEvent(userAccount, eventManager) {
         const currEvent = eventManager.getRandomEvent();
         // イベントの実行
-        // currEvent.execute(userAccount);
-        // // イベント告知モーダルの作成
+        currEvent.execute(userAccount);
+        // イベント告知モーダルの作成
         // eventModal = eventManager.createEventModal(currEvent);
     }
 

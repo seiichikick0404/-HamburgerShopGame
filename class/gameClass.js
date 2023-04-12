@@ -146,7 +146,9 @@ export class Game {
         // イベントモーダルを作成
         const events = [new StockPriceRiseEvent(), new StockPriceCrashEvent()];
         const eventManager = new EventManager(events);
-        this.createEvent(userAccount, eventManager);
+        eventManager.startEventInterval();
+        // todo セットしたイベントを実行
+        // this.createEvent(userAccount, eventManager);
 
         mainContainer.append(mainPageLeft, mainPageRight);
 
@@ -166,8 +168,6 @@ export class Game {
 
             // ETF, Bondsの利益反映
             let total = 0;
-
-
             for (let i = 1; i < userAccount.items.length; i++) {
                 let item = userAccount.items[i];
                 if (userAccount.items[i].purchaseCount > 0){
@@ -179,7 +179,6 @@ export class Game {
                     if (item.type === "realEstate") total += parseInt(item.purchaseCount * item.profit);
                 }
             }
-
 
             userAccount.assetValue += total;
             mainContainer.querySelector("#totalMoney").innerHTML = `
@@ -375,7 +374,8 @@ export class Game {
      */
     createEvent(userAccount, eventManager) {
         const currEvent = eventManager.getRandomEvent();
-        // イベントの実行
+        // イベント実行
+        console.log(currEvent);
         currEvent.execute(userAccount);
         // イベント告知モーダルの作成
         // eventModal = eventManager.createEventModal(currEvent);

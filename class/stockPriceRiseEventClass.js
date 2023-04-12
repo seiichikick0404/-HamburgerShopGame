@@ -3,7 +3,9 @@ import { Event } from "./eventClass.js";
 // 株価暴騰イベント
 export class StockPriceRiseEvent extends Event {
     constructor() {
-        super('株価爆上げイベント', 0.1);
+        super();
+        this.description = "株価上昇イベント";
+        this.probability = 0.2
     }
 
     /**
@@ -12,10 +14,37 @@ export class StockPriceRiseEvent extends Event {
      * @return {void}
      */
     execute(userAccount) {
-        console.log(userAccount.items);
-        // 暴騰の仕様
-        // ①保有してるETF・債券の価格が+50%
-        // ②1秒当たりの利益も増加
-        // ③これらは一定時間後元に戻る
+        const items = userAccount.items;
+        for (let i=0; i < items.length; i++) {
+            let currTotalInvestment = items[i].totalInvestment += Math.floor(this.probability * items[i].totalInvestment);
+            currTotalInvestment = currTotalInvestment < 0 ? 0 : currTotalInvestment;
+
+            let currTotalBond = items[i].totalBond += Math.floor(this.probability * items[i].totalBond);
+            currTotalBond = currTotalBond < 0 ? 0 : currTotalBond
+
+            // 株と債券の価格の減少処理
+            if (items[i].itemName === "ETF Stock") items[i].totalInvestment = currTotalInvestment;
+            else if (items[i].itemName === "ETF Bonds") items[i].totalBond = currTotalBond;
+        }
+    }
+
+    /**
+     * イベントをストップし元の状態に戻す
+     * @param {UserAccount} userAccount
+     * @return {void}
+     */
+    stopEventExecution(userAccount) {
+        const items = userAccount.items;
+        for (let i=0; i < items.length; i++) {
+            let currTotalInvestment = items[i].totalInvestment -= Math.floor(this.probability * items[i].totalInvestment);
+            currTotalInvestment = currTotalInvestment < 0 ? 0 : currTotalInvestment;
+
+            let currTotalBond = items[i].totalBond -= Math.floor(this.probability * items[i].totalBond);
+            currTotalBond = currTotalBond < 0 ? 0 : currTotalBond
+
+            // 株と債券の価格を通常時に戻す
+            if (items[i].itemName === "ETF Stock") items[i].totalInvestment = currTotalInvestment;
+            else if (items[i].itemName === "ETF Bonds") items[i].totalBond = currTotalBond;
+        }
     }
 }

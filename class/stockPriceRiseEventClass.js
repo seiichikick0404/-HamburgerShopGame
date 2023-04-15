@@ -26,14 +26,15 @@ export class StockPriceRiseEvent extends Event {
             if (items[i].itemName === "ETF Stock") items[i].totalInvestment = currTotalInvestment;
             else if (items[i].itemName === "ETF Bonds") items[i].totalBond = currTotalBond;
         }
+        console.log("株価上昇中");
     }
 
     /**
-     * イベントをストップし元の状態に戻す
+     * イベントで変動した値を元の状態に戻す
      * @param {UserAccount} userAccount
      * @return {void}
      */
-    stopEventExecution(userAccount) {
+    resetEventValue(userAccount) {
         const items = userAccount.items;
         for (let i=0; i < items.length; i++) {
             let currTotalInvestment = items[i].totalInvestment -= Math.floor(this.probability * items[i].totalInvestment);

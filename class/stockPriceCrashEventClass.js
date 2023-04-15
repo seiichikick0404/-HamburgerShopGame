@@ -3,6 +3,8 @@ import { UserAccount } from "./userAccountClass.js";
 
 // 株価暴落イベント
 export class StockPriceCrashEvent extends Event {
+    totalInvestment;
+
     constructor() {
         super();
         this.description = "株価暴落イベント";
@@ -27,15 +29,20 @@ export class StockPriceCrashEvent extends Event {
             if (items[i].itemName === "ETF Stock") items[i].totalInvestment = currTotalInvestment;
             else if (items[i].itemName === "ETF Bonds") items[i].totalBond = currTotalBond;
         }
+        console.log("株価暴落中");
     }
 
     /**
-     * イベントをストップし元の状態に戻す
+     * イベントで変動した値を元の状態に戻す
      * @param {UserAccount} userAccount
      * @return {void}
      */
-    stopEventExecution(userAccount) {
+    resetEventValue(userAccount) {
+        // todo 元に戻すロジックに穴がある
+        // -50%した値に+50%しても元の値に戻らない
+        // 元の値を保持したりの対応が必要
         const items = userAccount.items;
+        console.log(userAccount);
         for (let i=0; i < items.length; i++) {
             let currTotalInvestment = items[i].totalInvestment += Math.floor(this.probability * items[i].totalInvestment);
 

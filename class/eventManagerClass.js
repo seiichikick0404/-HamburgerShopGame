@@ -25,25 +25,36 @@ export class EventManager {
 
     }
 
-    startEventInterval() {
-        this.intervalID = setInterval(() => {
-            console.log("start event");
-            this.handleEvent();
-            this.resetEventInterval();
-        }, 30 * 1000);
+    /**
+     * 一定時間おきにイベントを実行
+     * @param {UserAccount} userAccount
+     * @return {void}
+     */
+    startEvent(userAccount) {
+        console.log("変動前保有株" + userAccount.items[1].totalInvestment);
+        setTimeout(() => {
+            console.log("start event");  // デバッグ用
+            let currEvent = this.getRandomEvent();
+            currEvent.execute(userAccount);
+            console.log("変動後保有株" + userAccount.items[1].totalInvestment);
+            this.startEventInterval(userAccount, currEvent);
+        }, 10 * 1000);
     }
 
-    resetEventInterval() {
-        clearTimeout(this.timeoutID);
-        this.timeoutID = setTimeout(() => {
-          this.startEventInterval();
-        }, 30 * 1000);
+    /**
+     * イベント間のインターバル
+     * @param {UserAccount} userAccount
+     * @param {Event} currEvent
+     * @return {void}
+     */
+    startEventInterval(userAccount, currEvent) {
+        // イベントタイマーを停止
+        setTimeout(() => {
+            console.log("イベントまで30秒間待機中"); //デバッグ用
+            // イベントの値を初期化
+            currEvent.resetEventValue(userAccount);
+            console.log("初期化後保有株" + userAccount.items[1].totalInvestment);
+            this.startEvent(userAccount);
+        }, 10 * 1000);
     }
-
-    handleEvent() {
-        const randomNumber = Math.floor(Math.random() * 100);
-        console.log(`イベント発生！ランダムな数値は ${randomNumber} です。`);
-    }
-
-
 }

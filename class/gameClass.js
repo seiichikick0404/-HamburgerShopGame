@@ -146,9 +146,8 @@ export class Game {
         // イベントモーダルを作成
         const events = [new StockPriceRiseEvent(), new StockPriceCrashEvent()];
         const eventManager = new EventManager(events);
-        eventManager.startEventInterval();
-        // todo セットしたイベントを実行
-        // this.createEvent(userAccount, eventManager);
+        eventManager.startEvent(userAccount);
+
 
         mainContainer.append(mainPageLeft, mainPageRight);
 

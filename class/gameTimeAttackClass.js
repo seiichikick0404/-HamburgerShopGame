@@ -1,10 +1,11 @@
+import { Game } from './gameClass.js';
 import { Item } from './itemClass.js';
 import { UserAccount } from './userAccountClass.js';
 import { Hamburger } from './hamburgerClass.js';
 
 
 // Todo 独自の仕様に変更
-export class GameTimeAttack {
+export class GameTimeAttack extends Game {
 
     config = {
         initialForm: document.getElementById("initial-form"),

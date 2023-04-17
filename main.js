@@ -1,4 +1,4 @@
-import { Game } from './class/gameClass.js';
+import { NormalGame } from './class/normalGameClass.js';
 import { GameTimeAttack } from './class/gameTimeAttackClass.js';
 
 
@@ -25,7 +25,7 @@ window.startGame = (newOrLogin) => {
 function getRule(inputRule) {
     if (inputRule === "normal") {
         console.log("ノーマルモードで開始");
-        return new Game();
+        return new NormalGame();
     } else if (inputRule === "countDown") {
         console.log("タイムアタックモード");
         return new GameTimeAttack();

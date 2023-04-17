@@ -18,11 +18,26 @@ export class EventManager {
     }
 
     /**
-     * イベント発生モーダルの作成
+     * イベント発生時モーダルの呼び出し
      * @param {Event} event
+     * @param {Game} game
+     * @return {void}
      */
-    createEventModal(event) {
+    openModal(event, game) {
+        const modalContainer = event.generateEventModal();
 
+        game.config.mainPage.append(modalContainer);
+
+        document.getElementById('staticBackdrop').classList.add('show');
+        document.getElementById('staticBackdrop').style.display = 'block';
+        var backdrop = document.createElement('div');
+        backdrop.classList.add('modal-backdrop', 'fade', 'show');
+        document.body.appendChild(backdrop);
+
+        // リザルトボタンが押された際の処理
+        modalContainer.querySelector("#close-btn").addEventListener("click", function() {
+            window.location.reload();
+        });
     }
 
     /**
@@ -30,12 +45,17 @@ export class EventManager {
      * @param {UserAccount} userAccount
      * @return {void}
      */
-    startEvent(userAccount) {
+    startEvent(userAccount, game) {
         console.log("変動前保有株" + userAccount.items[1].totalInvestment);
         setTimeout(() => {
             console.log("start event");  // デバッグ用
             let currEvent = this.getRandomEvent();
             currEvent.execute(userAccount);
+
+            // モーダルの出力処理----
+            this.openModal(currEvent, game);
+            // デバッグ中ーーーーー
+
             console.log("変動後保有株" + userAccount.items[1].totalInvestment);
             this.startEventInterval(userAccount, currEvent);
         }, 10 * 1000);

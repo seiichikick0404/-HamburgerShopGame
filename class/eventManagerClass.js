@@ -2,7 +2,7 @@
 export class EventManager {
     events;
     eventInterval = 300;
-    eventState = false;
+    modalState = false;
     intervalID;
 
     constructor (events) {
@@ -23,10 +23,11 @@ export class EventManager {
      * @return {void}
      */
     openModal(event) {
+        this.modalState = true;
+
         let modalContainer = event.generateEventModal();
 
         document.getElementById("mainPage").append(modalContainer);
-
         document.getElementById('staticBackdrop').classList.add('show');
         document.getElementById('staticBackdrop').style.display = 'block';
         var backdrop = document.createElement('div');
@@ -34,11 +35,10 @@ export class EventManager {
         document.body.appendChild(backdrop);
 
         // Closeボタンが押された際の処理
+        const _this = this;
         modalContainer.querySelector("#close-btn").addEventListener("click", function() {
-            // window.location.reload();
-            // モーダルを削除
-            document.querySelector(".modal-container").remove();
-            backdrop.remove();
+            // モーダルを閉じる
+            _this.closeModal();
         });
     }
 
@@ -51,6 +51,9 @@ export class EventManager {
         console.log("変動前保有株" + userAccount.items[1].totalInvestment);
         setTimeout(() => {
             console.log("start event");  // デバッグ用
+            // モーダル多重表示防止
+            if (this.modalState) this.closeModal();
+
             let currEvent = this.getRandomEvent();
             currEvent.execute(userAccount);
 
@@ -58,7 +61,7 @@ export class EventManager {
             this.openModal(currEvent);
             // デバッグ中ーーーーー
 
-            console.log("変動後保有株" + userAccount.items[1].totalInvestment);
+            console.log("変動後保有株" + userAccount.items[1].totalInvestment); // デバッグ用
             this.startEventInterval(userAccount, currEvent);
         }, 10 * 1000);
     }
@@ -78,5 +81,15 @@ export class EventManager {
             console.log("初期化後保有株" + userAccount.items[1].totalInvestment);
             this.startEvent(userAccount);
         }, 10 * 1000);
+    }
+
+    /**
+     * モーダルを閉じる
+     * @return {void}
+     */
+    closeModal() {
+        document.querySelector(".modal-container").remove();
+        document.querySelector(".modal-backdrop").remove();
+        this.modalState = false;
     }
 }

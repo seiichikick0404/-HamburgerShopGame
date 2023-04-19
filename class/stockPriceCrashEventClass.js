@@ -59,6 +59,8 @@ export class StockPriceCrashEvent extends Event {
      */
     generateEventModal() {
         const modalContainer = document.createElement("div");
+        modalContainer.classList.add("modal-container");
+        console.log(modalContainer);
         // 現在の総資産
         modalContainer.innerHTML = `
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

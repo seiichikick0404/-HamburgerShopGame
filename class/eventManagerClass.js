@@ -20,13 +20,12 @@ export class EventManager {
     /**
      * イベント発生時モーダルの呼び出し
      * @param {Event} event
-     * @param {Game} game
      * @return {void}
      */
-    openModal(event, game) {
-        const modalContainer = event.generateEventModal();
+    openModal(event) {
+        let modalContainer = event.generateEventModal();
 
-        game.config.mainPage.append(modalContainer);
+        document.getElementById("mainPage").append(modalContainer);
 
         document.getElementById('staticBackdrop').classList.add('show');
         document.getElementById('staticBackdrop').style.display = 'block';
@@ -34,9 +33,12 @@ export class EventManager {
         backdrop.classList.add('modal-backdrop', 'fade', 'show');
         document.body.appendChild(backdrop);
 
-        // リザルトボタンが押された際の処理
+        // Closeボタンが押された際の処理
         modalContainer.querySelector("#close-btn").addEventListener("click", function() {
-            window.location.reload();
+            // window.location.reload();
+            // モーダルを削除
+            document.querySelector(".modal-container").remove();
+            backdrop.remove();
         });
     }
 
@@ -45,7 +47,7 @@ export class EventManager {
      * @param {UserAccount} userAccount
      * @return {void}
      */
-    startEvent(userAccount, game) {
+    startEvent(userAccount) {
         console.log("変動前保有株" + userAccount.items[1].totalInvestment);
         setTimeout(() => {
             console.log("start event");  // デバッグ用
@@ -53,7 +55,7 @@ export class EventManager {
             currEvent.execute(userAccount);
 
             // モーダルの出力処理----
-            this.openModal(currEvent, game);
+            this.openModal(currEvent);
             // デバッグ中ーーーーー
 
             console.log("変動後保有株" + userAccount.items[1].totalInvestment);

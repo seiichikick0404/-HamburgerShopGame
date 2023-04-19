@@ -147,7 +147,7 @@ export class NormalGame extends Game {
         // イベントモーダルを作成
         const events = [new StockPriceRiseEvent(), new StockPriceCrashEvent()];
         const eventManager = new EventManager(events);
-        eventManager.startEvent(userAccount, this);
+        eventManager.startEvent(userAccount);
 
 
         mainContainer.append(mainPageLeft, mainPageRight);

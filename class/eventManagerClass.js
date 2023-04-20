@@ -75,10 +75,11 @@ export class EventManager {
     startEventInterval(userAccount, currEvent) {
         // イベントタイマーを停止
         setTimeout(() => {
-            console.log("イベントまで30秒間待機中"); //デバッグ用
+            console.log("イベントまで10秒間待機中"); //デバッグ用
+            alert("イベントが終了しました")
             // イベントの値を初期化
             currEvent.resetEventValue(userAccount);
-            console.log("初期化後保有株" + userAccount.items[1].totalInvestment);
+            console.log("初期化後保有株" + userAccount.items[1].totalInvestment); //デバッグ用
             this.startEvent(userAccount);
         }, 10 * 1000);
     }

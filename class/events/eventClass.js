@@ -1,11 +1,15 @@
 // イベントクラスの基底クラス
 export class Event {
+    title;
     description;
     probability;
+    imgUrl;
 
-    constructor(description, probability) {
-      this.description = description;
-      this.probability = probability;
+    constructor(title, description, probability, imgUrl) {
+        this.title = title;
+        this.description = description;
+        this.probability = probability;
+        this.imgUrl = imgUrl;
     }
 
     execute() {

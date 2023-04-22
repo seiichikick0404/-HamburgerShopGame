@@ -1,0 +1,81 @@
+body {
+  background-color: #333;
+}
+
+h1 {
+  color: #f1c40f;
+  font-size: 48px;
+  text-align: center;
+  margin-top: 100px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+  position: relative;
+  background-color: #fefefe;
+  margin: auto;
+  padding: 0;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px;
+  box-shadow: 0 0 20px #000;
+  border-radius: 10px;
+  overflow: hidden;
+  animation-name: modalopen;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+  transform: translateY(-100px);
+}
+
+@keyframes modalopen {
+  from {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-header {
+  padding: 15px;
+  background-color: #f1c40f;
+  color: white;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-footer {
+  padding: 15px;
+  background-color: #f1c40f;
+  color: white;
+  text-align: center;
+}

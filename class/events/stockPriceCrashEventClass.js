@@ -1,5 +1,5 @@
 import { Event } from "./eventClass.js";
-import { UserAccount } from "./userAccountClass.js";
+import { UserAccount } from "../userAccountClass.js";
 
 // 株価暴落イベント
 export class StockPriceCrashEvent extends Event {
@@ -8,8 +8,10 @@ export class StockPriceCrashEvent extends Event {
 
     constructor() {
         super();
-        this.description = "株価暴落イベント";
+        this.title = "バブル崩壊！";
+        this.description = "株価大暴落中！ハンバーガーをもっと売るしかない！";
         this.probability = 0.5;
+        this.imgUrl = "images/1337082.jpg";
     }
 
     /**
@@ -67,14 +69,14 @@ export class StockPriceCrashEvent extends Event {
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Result view</h5>
+                        <h2 class="modal-title" id="staticBackdropLabel">${this.title}</h2>
                     </div>
                     <div class="modal-body">
-                        <h2>株価が大暴落！！！</h2>
-                        <h2>一定時間株価-50%</h2>
+                        <img src="${this.imgUrl}" alt="${this.title}" />
+                        <p>${this.description}</p>
                     </div>
                     <div class="modal-footer">
-                        <button id="close-btn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button id="close-btn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
                     </div>
                 </div>
             </div>

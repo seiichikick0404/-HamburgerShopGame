@@ -7,8 +7,10 @@ export class StockPriceRiseEvent extends Event {
 
     constructor() {
         super();
-        this.description = "株価上昇イベント";
+        this.title = "ぶっちぎりの爆上げ！";
+        this.description = "株価が宇宙まで届く勢いで急騰中！急いでチェックしよう！";
         this.probability = 0.2;
+        this.imgUrl = "images/877435.jpg";
     }
 
     /**
@@ -66,14 +68,14 @@ export class StockPriceRiseEvent extends Event {
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Result view</h5>
+                        <h2 class="modal-title" id="staticBackdropLabel">${this.title}</h2>
                     </div>
                     <div class="modal-body">
-                        <h2>株価が急上昇!!</h2>
-                        <h2>一定時間株価+30%</h2>
+                        <img src="${this.imgUrl}" alt="${this.title}" />
+                        <p>${this.description}</p>
                     </div>
                     <div class="modal-footer">
-                        <button id="close-btn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button id="close-btn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
                     </div>
                 </div>
             </div>

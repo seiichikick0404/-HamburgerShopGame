@@ -2,9 +2,9 @@ import { Game } from './gameClass.js';
 import { Item } from './itemClass.js';
 import { UserAccount } from './userAccountClass.js';
 import { Hamburger } from './hamburgerClass.js';
-import {StockPriceRiseEvent} from './stockPriceRiseEventClass.js';
-import {StockPriceCrashEvent} from './stockPriceCrashEventClass.js';
-import {EventManager} from './eventManagerClass.js';
+import {StockPriceRiseEvent} from './events/stockPriceRiseEventClass.js';
+import {StockPriceCrashEvent} from './events/stockPriceCrashEventClass.js';
+import {EventManager} from './events/eventManagerClass.js';
 
 
 

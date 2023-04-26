@@ -73,7 +73,7 @@ export class StockPriceCrashEvent extends Event {
                     </div>
                     <div class="modal-body">
                         <img src="${this.imgUrl}" alt="${this.title}" />
-                        <p>${this.description}</p>
+                        <h4>${this.description}</h4>
                     </div>
                     <div class="modal-footer">
                         <button id="close-btn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>

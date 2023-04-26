@@ -19,6 +19,10 @@ export class Event {
     stopEventExecution() {
         // 何もしない。イベントごとにオーバーライドされる。
     }
+
+    generateEventModal() {
+        // 何もしない。イベントごとにオーバーライドされる。
+    }
 }
 
 

@@ -34,9 +34,6 @@ export class EventManager {
         // モーダルを表示
         this.modal = new bootstrap.Modal(document.getElementById('exampleModal'));
         this.modal.show();
-        console.log("現在のモーダルの中身---------------------");
-        console.log(modalContainer);
-        console.log("現在のモーダルの中身---------------------");
 
         //Closeボタンが押された際の処理
         const _this = this;

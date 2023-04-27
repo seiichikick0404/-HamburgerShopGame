@@ -4,6 +4,7 @@ export class EventManager {
     eventInterval = 300;
     modalState = false;
     intervalID;
+    modal;
 
     constructor (events) {
         this.events = events;
@@ -14,6 +15,7 @@ export class EventManager {
      *  @return {Event}
      */
     getRandomEvent() {
+        console.log("eventsからランダムで選ばれます");
         return this.events[Math.floor(Math.random() * this.events.length)];
     }
 
@@ -28,13 +30,15 @@ export class EventManager {
         let modalContainer = event.generateEventModal();
 
         document.getElementById("mainPage").append(modalContainer);
-        document.getElementById('staticBackdrop').classList.add('show');
-        document.getElementById('staticBackdrop').style.display = 'block';
-        var backdrop = document.createElement('div');
-        backdrop.classList.add('modal-backdrop', 'fade', 'show');
-        document.body.appendChild(backdrop);
 
-        // Closeボタンが押された際の処理
+        // モーダルを表示
+        this.modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+        this.modal.show();
+        console.log("現在のモーダルの中身---------------------");
+        console.log(modalContainer);
+        console.log("現在のモーダルの中身---------------------");
+
+        //Closeボタンが押された際の処理
         const _this = this;
         modalContainer.querySelector("#close-btn").addEventListener("click", function() {
             // モーダルを閉じる
@@ -48,20 +52,17 @@ export class EventManager {
      * @return {void}
      */
     startEvent(userAccount) {
-        console.log("変動前保有株" + userAccount.items[1].totalInvestment);
         setTimeout(() => {
             console.log("start event");  // デバッグ用
             // モーダル多重表示防止
             if (this.modalState) this.closeModal();
 
             let currEvent = this.getRandomEvent();
+
             currEvent.execute(userAccount);
 
-            // モーダルの出力処理----
             this.openModal(currEvent);
-            // デバッグ中ーーーーー
 
-            console.log("変動後保有株" + userAccount.items[1].totalInvestment); // デバッグ用
             this.startEventInterval(userAccount, currEvent);
         }, 10 * 1000);
     }
@@ -75,11 +76,9 @@ export class EventManager {
     startEventInterval(userAccount, currEvent) {
         // イベントタイマーを停止
         setTimeout(() => {
-            console.log("イベントまで10秒間待機中"); //デバッグ用
             alert("イベントが終了しました")
             // イベントの値を初期化
             currEvent.resetEventValue(userAccount);
-            console.log("初期化後保有株" + userAccount.items[1].totalInvestment); //デバッグ用
             this.startEvent(userAccount);
         }, 10 * 1000);
     }
@@ -89,8 +88,8 @@ export class EventManager {
      * @return {void}
      */
     closeModal() {
-        document.querySelector(".modal-container").remove();
-        document.querySelector(".modal-backdrop").remove();
+        this.modal.hide();
+        document.querySelector("#exampleModal").remove();
         this.modalState = false;
     }
 }

@@ -61,7 +61,7 @@ export class EventManager {
             this.openModal(currEvent);
 
             this.startEventInterval(userAccount, currEvent);
-        }, 10 * 1000);
+        }, 180 * 1000);
     }
 
     /**
@@ -77,7 +77,7 @@ export class EventManager {
             // イベントの値を初期化
             currEvent.resetEventValue(userAccount);
             this.startEvent(userAccount);
-        }, 10 * 1000);
+        }, 120 * 1000);
     }
 
     /**

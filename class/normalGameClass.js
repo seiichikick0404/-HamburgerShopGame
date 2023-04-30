@@ -147,8 +147,7 @@ export class NormalGame extends Game {
         mainPageRight.append(this.createMainPageBtn(userAccount))
 
         // イベントモーダルを作成
-        //const events = [new StockPriceRiseEvent(), new StockPriceCrashEvent(), new HamburgerBubbleEvent()];
-        const events = [new CatBurglarEvent()];
+        const events = [new StockPriceRiseEvent(), new StockPriceCrashEvent(), new HamburgerBubbleEvent(), new CatBurglarEvent()];
         const eventManager = new EventManager(events);
         eventManager.startEvent(userAccount);
 

@@ -6,6 +6,7 @@ import {StockPriceRiseEvent} from './events/stockPriceRiseEventClass.js';
 import {StockPriceCrashEvent} from './events/stockPriceCrashEventClass.js';
 import {EventManager} from './events/eventManagerClass.js';
 import { HamburgerBubbleEvent } from './events/hamburgerBubble.js';
+import { CatBurglarEvent } from './events/catBurglarEventClass.js';
 
 
 
@@ -146,7 +147,8 @@ export class NormalGame extends Game {
         mainPageRight.append(this.createMainPageBtn(userAccount))
 
         // イベントモーダルを作成
-        const events = [new StockPriceRiseEvent(), new StockPriceCrashEvent(), new HamburgerBubbleEvent()];
+        //const events = [new StockPriceRiseEvent(), new StockPriceCrashEvent(), new HamburgerBubbleEvent()];
+        const events = [new CatBurglarEvent()];
         const eventManager = new EventManager(events);
         eventManager.startEvent(userAccount);
 
